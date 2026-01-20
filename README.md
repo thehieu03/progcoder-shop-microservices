@@ -55,7 +55,7 @@ Created by [**ProG Coder**](https://www.progcoder.com)
 
 ---
 
-
+https://github.com/huynxtb/progcoder-shop-microservices/tree/main
 ## 🚀 Project Overview
 
 This repository contains a comprehensive suite of microservices implementing a complete **e-commerce platform**, including **Catalog, Basket, Order, Inventory, Discount, Notification, Search, Report, and Communication** services. The platform utilizes a hybrid database strategy with **NoSQL (MongoDB, Redis)** and **Relational databases (PostgreSQL, SQL Server, MySQL)**.
@@ -66,7 +66,7 @@ Services communicate asynchronously via **RabbitMQ** (Event-Driven Architecture)
 
 Overall picture of the **microservices implementation** in the **ProG Coder Shop** project:
 
-![ProGCoder.Com](assets/imgs/microservices_architecture.png)
+![Microservices Architecture](assets/imgs/microservices_architecture.png)
 
 ## Technology Stack, Design Patterns, Infrastructure & Architecture
 
