@@ -2,7 +2,7 @@ import React from "react";
 import Dropdown from "@/components/ui/Dropdown";
 import Icon from "@/components/ui/Icon";
 import { MenuItem } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "@/store/api/auth/authSlice";
 import { useKeycloak } from "@/contexts/KeycloakContext";
@@ -10,13 +10,14 @@ import { useKeycloak } from "@/contexts/KeycloakContext";
 import UserAvatar from "@/assets/images/all-img/user.png";
 
 const Profile = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { logout, getUserInfo } = useKeycloak();
   const user = useSelector((state) => state.auth.user);
 
   const userInfo = getUserInfo() || user;
-  const displayName = userInfo?.name || userInfo?.username || userInfo?.email || "User";
+  const displayName =
+    userInfo?.name || userInfo?.username || userInfo?.email || "User";
 
   const profileLabel = () => {
     return (
@@ -58,7 +59,7 @@ const Profile = () => {
       icon: "heroicons-outline:user",
 
       action: () => {
-        navigate("/profile");
+        router.push("/profile");
       },
     },
     {
@@ -83,8 +84,7 @@ const Profile = () => {
                 item.hasDivider
                   ? "border-t border-slate-100 dark:border-slate-700"
                   : ""
-              }`}
-            >
+              }`}>
               <div className={`block cursor-pointer px-4 py-2`}>
                 <div className="flex items-center">
                   <span className="block text-xl ltr:mr-3 rtl:ml-3">

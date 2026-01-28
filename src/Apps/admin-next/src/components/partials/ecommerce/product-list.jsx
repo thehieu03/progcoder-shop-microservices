@@ -5,7 +5,7 @@ import Badge from "@/components/ui/Badge";
 import CounterButton from "@/components/partials/ecommerce/counter-button";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, updateQuantity } from "@/store/api/shop/cartSlice";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 const ProductList = ({ item }) => {
   const dispatch = useDispatch();
   const { name, category, img, rating, desc, price, oldPrice, percent, id } =
@@ -19,8 +19,7 @@ const ProductList = ({ item }) => {
   return (
     <Card
       bodyClass="p-3 rounded-md 2xl:flex lg:flex md:flex-none sm:flex-none"
-      className="group "
-    >
+      className="group ">
       <Link to={item.id}>
         <div className=" bg-secondary-200 dark:rounded-sm relative h-[259px] flex flex-col justify-center items-center rounded-md  mb-3 lg:mb-0   md:ltr:mr-0 sm:ltr:mr-0 md:rtl:ml-0 sm:rtl:ml-0 lg:ltr:mr-3 lg:rtl:ml-3">
           <div className="h-[235px]  w-[266px] p-12">
@@ -92,8 +91,7 @@ const ProductList = ({ item }) => {
             onClick={() => handleAddToCart(item)}
             disabled={cartItems.some((cartItem) => cartItem.id === id)}
             className="font-medium text-sm flex items-center max-w-[202px] px-4  disabled:cursor-not-allowed disabled:opacity-50 border-slate-900 dark:border-slate-700 border hover:bg-slate-900 rounded-sm hover:text-white dark:hover:text-white dark:hover:bg-slate-700 ml-3 rtl:mr-3"
-            iconClass=" text-sm leading-none"
-          >
+            iconClass=" text-sm leading-none">
             <Icon icon="heroicons:shopping-bag" className="ltr:mr-2 rtl:ml-2" />
             Add to Cart
           </button>

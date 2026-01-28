@@ -1,13 +1,12 @@
-import { useEffect, lazy, Suspense } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
-import { useKeycloak } from '@/contexts/KeycloakContext';
-import Loading from '@/components/Loading';
-import Layout from '@/layout/Layout';
+import { useEffect, lazy, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { useKeycloak } from "@/contexts/KeycloakContext";
+import Loading from "@/components/Loading";
 
-const Ecommerce = lazy(() => import('@/pages/dashboard/ecommerce'));
+const Ecommerce = lazy(() => import("@/pages/dashboard/ecommerce"));
 
 const RootRedirect = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { authenticated, keycloakReady } = useKeycloak();
 
   useEffect(() => {
@@ -17,9 +16,9 @@ const RootRedirect = () => {
 
     if (!authenticated) {
       // If not authenticated, redirect to /login
-      navigate('/login', { replace: true });
+      router.push("/login");
     }
-  }, [authenticated, keycloakReady, navigate]);
+  }, [authenticated, keycloakReady, router]);
 
   // If Keycloak is not ready, show loading
   if (!keycloakReady) {
@@ -40,4 +39,3 @@ const RootRedirect = () => {
 };
 
 export default RootRedirect;
-

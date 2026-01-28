@@ -6,7 +6,7 @@ import SimpleBar from "simplebar-react";
 import useSemiDark from "@/hooks/useSemiDark";
 import useSkin from "@/hooks/useSkin";
 import useDarkMode from "@/hooks/useDarkMode";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import useMobileMenu from "@/hooks/useMobileMenu";
 import Icon from "@/components/ui/Icon";
 
@@ -36,16 +36,23 @@ const MobileMenu = ({ className = "custom-class" }) => {
   const [mobileMenu, setMobileMenu] = useMobileMenu();
   return (
     <div
-      className={`${className} fixed  top-0 bg-white dark:bg-slate-800 shadow-lg  h-full   w-[248px]`}
-    >
+      className={`${className} fixed  top-0 bg-white dark:bg-slate-800 shadow-lg  h-full   w-[248px]`}>
       <div className="logo-segment flex justify-between items-center bg-white dark:bg-slate-800 z-9 h-[85px]  px-4 ">
-        <Link to="/dashboard">
+        <Link href="/dashboard">
           <div className="flex items-center space-x-4">
             <div className="logo-icon">
               {!isDark && !isSemiDark ? (
-                <img src={MobileLogo} alt="" style={{ width: "32px", height: "32px" }} />
+                <img
+                  src={MobileLogo}
+                  alt=""
+                  style={{ width: "32px", height: "32px" }}
+                />
               ) : (
-                <img src={MobileLogoWhite} alt="" style={{ width: "32px", height: "32px" }} />
+                <img
+                  src={MobileLogoWhite}
+                  alt=""
+                  style={{ width: "32px", height: "32px" }}
+                />
               )}
             </div>
             <div>
@@ -58,8 +65,7 @@ const MobileMenu = ({ className = "custom-class" }) => {
         <button
           type="button"
           onClick={() => setMobileMenu(!mobileMenu)}
-          className="cursor-pointer text-slate-900 dark:text-white text-2xl"
-        >
+          className="cursor-pointer text-slate-900 dark:text-white text-2xl">
           <Icon icon="heroicons:x-mark" />
         </button>
       </div>
@@ -67,12 +73,10 @@ const MobileMenu = ({ className = "custom-class" }) => {
       <div
         className={`h-[60px]  absolute top-[80px] nav-shadow z-1 w-full transition-all duration-200 pointer-events-none ${
           scroll ? " opacity-100" : " opacity-0"
-        }`}
-      ></div>
+        }`}></div>
       <SimpleBar
         className="sidebar-menu px-4 h-[calc(100%-80px)]"
-        scrollableNodeProps={{ ref: scrollableNodeRef }}
-      >
+        scrollableNodeProps={{ ref: scrollableNodeRef }}>
         <Navmenu menus={menuItems} />
         <div className="bg-slate-900 mb-24 lg:mb-10 mt-24 p-4 relative text-center rounded-2xl text-white">
           <img

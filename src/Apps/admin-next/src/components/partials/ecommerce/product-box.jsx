@@ -8,7 +8,7 @@ import CounterButton from "@/components/partials/ecommerce/counter-button";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, updateQuantity } from "@/store/api/shop/cartSlice";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const ProductBox = ({ item, wish }) => {
   const dispatch = useDispatch();

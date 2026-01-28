@@ -1,11 +1,12 @@
 import React from "react";
 import useMenuTranslation from "@/hooks/useMenuTranslation";
 import Icon from "@/components/ui/Icon";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const HorizentalMenu = () => {
   const { topMenu } = useMenuTranslation();
+  const pathname = usePathname();
   return (
     <div className="main-menu">
       <ul>
@@ -16,13 +17,12 @@ const HorizentalMenu = () => {
               item.child
                 ? "menu-item-has-children"
                 : "" || item.megamenu
-                ? "menu-item-has-children has-megamenu"
-                : ""
-            }
-          >
+                  ? "menu-item-has-children has-megamenu"
+                  : ""
+            }>
             {/* Single menu*/}
             {!item.child && !item.megamenu && (
-              <Link to={item.link}>
+              <Link href={item.link}>
                 <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
                   <span className="icon-box">
                     <Icon icon={item.icon} />
@@ -54,8 +54,7 @@ const HorizentalMenu = () => {
                       <a
                         href={childitem.childlink}
                         target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                        rel="noopener noreferrer">
                         <div className="flex space-x-2 items-start rtl:space-x-reverse">
                           <Icon
                             icon={childitem.childicon}
@@ -64,11 +63,14 @@ const HorizentalMenu = () => {
                           <span className="leading-none">
                             {childitem.childtitle}
                           </span>
-                          <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
+                          <Icon
+                            icon="heroicons:arrow-top-right-on-square"
+                            className="w-4 h-4"
+                          />
                         </div>
                       </a>
                     ) : (
-                      <Link to={childitem.childlink}>
+                      <Link href={childitem.childlink}>
                         <div className="flex space-x-2 items-start rtl:space-x-reverse">
                           <Icon
                             icon={childitem.childicon}
@@ -96,28 +98,27 @@ const HorizentalMenu = () => {
                         <span> {m_item.megamenutitle}</span>
                       </div>
                       {/* single menu item*/}
-                      {m_item.singleMegamenu.map((ms_item, ms_i) => (
-                        <NavLink to={ms_item.m_childlink} key={ms_i}>
-                          {({ isActive }) => (
+                      {m_item.singleMegamenu.map((ms_item, ms_i) => {
+                        const isActive = pathname === ms_item.m_childlink;
+                        return (
+                          <Link href={ms_item.m_childlink} key={ms_i}>
                             <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
                               <span
                                 className={`h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none ${
                                   isActive ? " bg-slate-900 dark:bg-white" : ""
-                                }`}
-                              ></span>
+                                }`}></span>
                               <span
                                 className={`capitalize ${
                                   isActive
                                     ? " text-slate-900 dark:text-white font-medium"
                                     : "text-slate-600 dark:text-slate-300"
-                                }`}
-                              >
+                                }`}>
                                 {ms_item.m_childtitle}
                               </span>
                             </div>
-                          )}
-                        </NavLink>
-                      ))}
+                          </Link>
+                        );
+                      })}
                     </div>
                   ))}
                 </div>

@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useKeycloak } from "@/contexts/KeycloakContext";
 import Dropdown from "@/components/ui/Dropdown";
 import Icon from "@/components/ui/Icon";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { MenuItem } from "@headlessui/react";
 import { notificationService } from "@/services/notificationService";
 
 const Notification = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { authenticated, keycloakReady } = useKeycloak();
   const isAuth = useSelector((state) => state.auth?.isAuth);
   const [notifications, setNotifications] = useState([]);
@@ -64,7 +64,7 @@ const Notification = () => {
     // Don't fetch if authenticated is undefined/null/false or Keycloak is not ready
     if (keycloakReady && (authenticated === true || isAuth === true)) {
       fetchNotifications();
-      
+
       // Set up interval to fetch every 5 seconds
       const intervalId = setInterval(() => {
         fetchNotifications();
@@ -119,7 +119,7 @@ const Notification = () => {
 
       // Navigate if targetUrl exists
       if (notification.targetUrl) {
-        navigate(notification.targetUrl);
+        router.push(notification.targetUrl);
       }
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
@@ -152,7 +152,7 @@ const Notification = () => {
           {t("notification.title")}
         </div>
         <div className="text-slate-800 dark:text-slate-200 text-xs md:text-right">
-          <Link to="/notifications" className="underline">
+          <Link href="/notifications" className="underline">
             {t("notification.viewAll")}
           </Link>
         </div>
@@ -160,12 +160,19 @@ const Notification = () => {
       <div className="divide-y divide-slate-100 dark:divide-slate-800">
         {loading ? (
           <div className="px-4 py-8 text-center">
-            <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mx-auto mb-2" />
-            <span className="text-slate-500 dark:text-slate-400 text-sm">{t("common.loading")}</span>
+            <Icon
+              icon="heroicons:arrow-path"
+              className="animate-spin text-2xl text-slate-400 mx-auto mb-2"
+            />
+            <span className="text-slate-500 dark:text-slate-400 text-sm">
+              {t("common.loading")}
+            </span>
           </div>
         ) : notifications.length === 0 ? (
           <div className="px-4 py-8 text-center">
-            <span className="text-slate-500 dark:text-slate-400 text-sm">{t("notification.noNotifications")}</span>
+            <span className="text-slate-500 dark:text-slate-400 text-sm">
+              {t("notification.noNotifications")}
+            </span>
           </div>
         ) : (
           notifications.map((item, i) => (
@@ -177,15 +184,16 @@ const Notification = () => {
                       ? "bg-slate-100 dark:bg-slate-700 dark:bg-opacity-70 text-slate-800"
                       : "text-slate-600 dark:text-slate-300"
                   } block w-full px-4 py-2 text-sm cursor-pointer`}
-                  onClick={() => handleNotificationClick(item)}
-                >
+                  onClick={() => handleNotificationClick(item)}>
                   <div className="flex ltr:text-left rtl:text-right">
                     <div className="flex-none ltr:mr-3 rtl:ml-3">
                       <div className="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
-                        <Icon 
-                          icon="heroicons:bell" 
+                        <Icon
+                          icon="heroicons:bell"
                           className={`${
-                            active ? "text-slate-600 dark:text-slate-300" : "text-slate-500 dark:text-slate-400"
+                            active
+                              ? "text-slate-600 dark:text-slate-300"
+                              : "text-slate-500 dark:text-slate-400"
                           } text-lg`}
                         />
                       </div>
@@ -196,8 +204,7 @@ const Notification = () => {
                           active
                             ? "text-slate-800 dark:text-slate-200"
                             : "text-slate-600 dark:text-slate-300"
-                        } text-sm font-medium`}
-                      >
+                        } text-sm font-medium`}>
                         {item.title}
                       </div>
                       <div
@@ -205,8 +212,7 @@ const Notification = () => {
                           active
                             ? "text-slate-600 dark:text-slate-300"
                             : "text-slate-500 dark:text-slate-400"
-                        } text-xs leading-4 mt-1 line-clamp-2`}
-                      >
+                        } text-xs leading-4 mt-1 line-clamp-2`}>
                         {item.message}
                       </div>
                       <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">

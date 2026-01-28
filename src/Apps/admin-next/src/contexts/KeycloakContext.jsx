@@ -135,6 +135,9 @@ export const KeycloakProvider = ({ children }) => {
         if (keycloak && typeof keycloak === "object") {
           keycloak.onAuthSuccess = async () => {
             setAuthenticated(true);
+            // Set cookie for middleware
+            document.cookie =
+              "auth_status=authenticated; path=/; max-age=86400; SameSite=Lax";
 
             // Retry getting user info in case tokenParsed isn't ready yet
             const syncUserInfo = async (retries = 3, delay = 100) => {
@@ -159,12 +162,14 @@ export const KeycloakProvider = ({ children }) => {
             setAuthenticated(false);
             dispatch(logOut());
             localStorage.removeItem("user");
+            document.cookie = "auth_status=; path=/; max-age=0";
           };
 
           keycloak.onAuthLogout = () => {
             setAuthenticated(false);
             dispatch(logOut());
             localStorage.removeItem("user");
+            document.cookie = "auth_status=; path=/; max-age=0";
             router.push("/login");
           };
 
@@ -207,7 +212,7 @@ export const KeycloakProvider = ({ children }) => {
         tokenRefreshIntervalRef.current = null;
       }
     };
-  }, [dispatch, navigate]);
+  }, [dispatch, router]);
 
   const login = useCallback((options = {}) => {
     keycloakLogin(options);
