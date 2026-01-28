@@ -255,7 +255,7 @@ const CreateProduct = () => {
         </h4>
         <div className="flex space-x-3">
           <Link
-            to="/products"
+            href="/products"
             className="btn btn-outline-dark btn-sm inline-flex items-center">
             <Icon icon="heroicons:arrow-left" className="ltr:mr-2 rtl:ml-2" />
             {t("createProduct.back")}
@@ -628,7 +628,7 @@ const CreateProduct = () => {
                 )}
               </button>
               <Link
-                to="/products"
+                href="/products"
                 className="btn btn-outline-danger inline-flex items-center justify-center">
                 <Icon icon="heroicons:x-mark" className="ltr:mr-2 rtl:ml-2" />
                 {t("createProduct.cancelBtn")}

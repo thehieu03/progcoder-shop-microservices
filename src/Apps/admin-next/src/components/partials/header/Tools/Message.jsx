@@ -51,7 +51,7 @@ const Message = () => {
                           item.active ? "bg-secondary-500" : "bg-green-500"
                         } w-[10px] h-[10px] rounded-full border border-white dark:border-slate-700  inline-block absolute right-0 top-0`}></span>
                       <img
-                        src={item.image}
+                        src={item.image.src || item.image}
                         alt=""
                         className="block w-full h-full object-cover rounded-full border hover:border-white border-transparent"
                       />

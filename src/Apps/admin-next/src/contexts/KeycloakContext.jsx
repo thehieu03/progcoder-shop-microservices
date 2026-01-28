@@ -44,7 +44,7 @@ export const KeycloakProvider = ({ children }) => {
     const initializeKeycloak = async () => {
       try {
         // TEMPORARY: Mock Auth for testing
-        if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true" || true) {
+        if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true") {
           // Force true for now as requested
           console.log("Keycloak: Using MOCK authentication");
           setKeycloakReady(true);
@@ -235,13 +235,44 @@ export const KeycloakProvider = ({ children }) => {
     };
   }, [dispatch, router]);
 
-  const login = useCallback((options = {}) => {
-    keycloakLogin(options);
-  }, []);
+  const login = useCallback(
+    (options = {}) => {
+      // Check for Mock Auth
+      if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true" || true) {
+        console.log("Keycloak: Mock login");
+        setAuthenticated(true);
+        dispatch(
+          setUser({
+            id: "mock-user-id",
+            username: "testuser",
+            email: "test@example.com",
+            firstName: "Test",
+            lastName: "User",
+            name: "Test User",
+            roles: ["admin"],
+          }),
+        );
+        return;
+      }
+      keycloakLogin(options);
+    },
+    [dispatch],
+  );
 
-  const logout = useCallback((options = {}) => {
-    keycloakLogout(options);
-  }, []);
+  const logout = useCallback(
+    (options = {}) => {
+      // Check for Mock Auth
+      if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true" || true) {
+        console.log("Keycloak: Mock logout");
+        setAuthenticated(false);
+        dispatch(logOut());
+        router.push("/login"); // Redirect to login page
+        return;
+      }
+      keycloakLogout(options);
+    },
+    [dispatch, router],
+  );
 
   const value = {
     keycloakReady,

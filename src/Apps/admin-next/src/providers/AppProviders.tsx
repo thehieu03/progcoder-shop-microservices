@@ -22,8 +22,7 @@ export default function AppProviders({
   // Initialize MirageJS Mock Server
   React.useEffect(() => {
     // Check if mock data is enabled (force true for this user request)
-    const useMockData =
-      process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true" || true;
+    const useMockData = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
 
     if (useMockData && typeof window !== "undefined") {
       // Avoid starting twice in strict mode

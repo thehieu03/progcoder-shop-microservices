@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";

@@ -4,32 +4,18 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Card from "@/components/ui/Card";
 import BasicArea from "../chart/appex-chart/BasicArea";
-import { keycloakApi } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { useKeycloak } from "@/contexts/KeycloakContext";
 import LoaderCircle from "@/components/Loader-circle";
 
 // import images
 import ProfileImage from "@/assets/images/users/user-1.jpg";
 
 const profile = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user } = useKeycloak();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true);
-        const response = await keycloakApi.get(API_ENDPOINTS.KEYCLOAK.GET_ME);
-        setUser(response.data);
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
+  // Use user from context directly
+  // If user is not yet loaded, useKeycloak should handle loading state or user will be null
 
   if (loading) {
     return (

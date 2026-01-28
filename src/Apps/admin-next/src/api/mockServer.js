@@ -138,6 +138,10 @@ export function makeServer({ environment = "development" } = {}) {
 
       // --- Keycloak Me (Fake) ---
       // this.get('/account/me', () => ({ ... })); // Already handled by KeycloakContext mock
+      this.passthrough(`${apiGateway}/account/me`);
+      this.passthrough((request) => {
+        return request.url.includes("/account/me");
+      });
     },
   });
 }

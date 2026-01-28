@@ -26,7 +26,7 @@ const Profile = () => {
         <div className="flex-1 ltr:mr-[10px] rtl:ml-[10px]">
           <div className="lg:h-8 lg:w-8 h-7 w-7 rounded-full">
             <img
-              src={UserAvatar}
+              src={UserAvatar.src}
               alt=""
               className="block w-full h-full object-cover rounded-full"
             />

@@ -20,7 +20,7 @@ const ProductList = ({ item }) => {
     <Card
       bodyClass="p-3 rounded-md 2xl:flex lg:flex md:flex-none sm:flex-none"
       className="group ">
-      <Link to={item.id}>
+      <Link href={item.id}>
         <div className=" bg-secondary-200 dark:rounded-sm relative h-[259px] flex flex-col justify-center items-center rounded-md  mb-3 lg:mb-0   md:ltr:mr-0 sm:ltr:mr-0 md:rtl:ml-0 sm:rtl:ml-0 lg:ltr:mr-3 lg:rtl:ml-3">
           <div className="h-[235px]  w-[266px] p-12">
             <img
@@ -62,7 +62,7 @@ const ProductList = ({ item }) => {
           {category}
         </p>
         <h6 className="text-slate-900 dark:text-slate-300 text-lg	font-medium	pb-2 w-full truncate">
-          <Link to={item.id}>{name}</Link>
+          <Link href={item.id}>{name}</Link>
         </h6>
         <p className="pb-2 space-x-2 rtl:space-x-reverse">
           <span className="text-slate-900 dark:text-slate-300 text-lg	font-semibold ">

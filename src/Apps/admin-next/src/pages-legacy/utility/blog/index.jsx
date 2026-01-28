@@ -23,7 +23,7 @@ const BlogPage = () => {
             <Card>
               <div className=" h-[248px] w-full mb-6 ">
                 <img
-                  src={post1Img}
+                  src={post1Img.src}
                   alt=""
                   className=" w-full h-full  object-cover"
                 />
@@ -83,7 +83,7 @@ const BlogPage = () => {
           <Card bodyClass="p-0">
             <div className=" h-[248px] w-full mb-6 ">
               <img
-                src={post1Img}
+                src={post1Img.src}
                 alt=""
                 className=" w-full h-full  object-cover"
               />
@@ -119,7 +119,7 @@ const BlogPage = () => {
           <Card bodyClass="p-0">
             <div className=" h-[248px] w-full  ">
               <img
-                src={post1Img}
+                src={post1Img.src}
                 alt=""
                 className=" w-full h-full  object-cover"
               />
@@ -155,7 +155,7 @@ const BlogPage = () => {
           <Card bodyClass="p-0">
             <div className=" h-[248px] w-full mb-6 ">
               <img
-                src={post1Img}
+                src={post1Img.src}
                 alt=""
                 className=" w-full h-full  object-cover"
               />
@@ -191,7 +191,7 @@ const BlogPage = () => {
           <Card bodyClass="p-0">
             <div className=" h-[248px] w-full  ">
               <img
-                src={post1Img}
+                src={post1Img.src}
                 alt=""
                 className=" w-full h-full  object-cover"
               />

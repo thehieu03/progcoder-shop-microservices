@@ -1,7 +1,6 @@
 "use client";
-"use client";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
-import { advancedTable } from "../../constant/table-data";
+import { advancedTable } from "@/constant/table-data";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Dropdown from "@/components/ui/Dropdown";
@@ -15,7 +14,7 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import GlobalFilter from "../table/react-tables/GlobalFilter";
+import GlobalFilter from "../Table/GlobalFilter";
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {

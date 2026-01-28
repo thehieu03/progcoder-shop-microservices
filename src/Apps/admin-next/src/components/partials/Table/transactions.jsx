@@ -11,7 +11,7 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import GlobalFilter from "../../../pages/table/react-tables/GlobalFilter";
+import GlobalFilter from "./GlobalFilter";
 
 const COLUMNS = [
   {
@@ -81,8 +81,7 @@ const COLUMNS = [
             ${row?.cell?.value === "due" ? "text-warning-500 " : ""}
             ${row?.cell?.value === "cancled" ? "text-danger-500" : ""}
             
-             `}
-          >
+             `}>
             {row?.cell?.value === "due" && <span>+$ 1,200.00</span>}
             {row?.cell?.value === "paid" && <span>+$ 200.00</span>}
             {row?.cell?.value === "cancled" && <span>+$ 1400.00</span>}
@@ -103,8 +102,7 @@ const COLUMNS = [
               <span className="text-xl text-center block w-full">
                 <Icon icon="heroicons-outline:dots-vertical" />
               </span>
-            }
-          >
+            }>
             <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {actions.map((item, i) => (
                 <MenuItem key={i}>
@@ -116,8 +114,7 @@ const COLUMNS = [
                       : "hover:bg-slate-900 hover:text-white dark:hover:bg-slate-600 dark:hover:bg-opacity-50"
                   }
                    w-full border-b border-b-gray-500/10 px-4 py-2 text-sm  last:mb-0 cursor-pointer 
-                   first:rounded-t last:rounded-b flex  space-x-2 items-center rtl:space-x-reverse `}
-                  >
+                   first:rounded-t last:rounded-b flex  space-x-2 items-center rtl:space-x-reverse `}>
                     <span className="text-base">
                       <Icon icon={item.icon} />
                     </span>
@@ -164,7 +161,7 @@ const TransactionsTable = () => {
     useGlobalFilter,
     useSortBy,
     usePagination,
-    useRowSelect
+    useRowSelect,
   );
   const {
     getTableProps,
@@ -200,8 +197,7 @@ const TransactionsTable = () => {
             <div className="overflow-hidden ">
               <table
                 className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700!"
-                {...getTableProps()}
-              >
+                {...getTableProps()}>
                 <thead className="border-t border-slate-100 dark:border-slate-800!">
                   {headerGroups.map((headerGroup) => {
                     const { key: headerGroupKey, ...restHeaderGroupProps } =
@@ -211,15 +207,14 @@ const TransactionsTable = () => {
                         {headerGroup.headers.map((column) => {
                           const { key: columnKey, ...restColumnProps } =
                             column.getHeaderProps(
-                              column.getSortByToggleProps()
+                              column.getSortByToggleProps(),
                             );
                           return (
                             <th
                               key={columnKey}
                               {...restColumnProps}
                               scope="col"
-                              className="table-th"
-                            >
+                              className="table-th">
                               {column.render("Header")}
                               <span>
                                 {column.isSorted
@@ -237,8 +232,7 @@ const TransactionsTable = () => {
                 </thead>
                 <tbody
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
-                  {...getTableBodyProps()}
-                >
+                  {...getTableBodyProps()}>
                   {page.map((row) => {
                     prepareRow(row);
                     const { key: rowKey, ...restRowProps } = row.getRowProps();
@@ -251,8 +245,7 @@ const TransactionsTable = () => {
                             <td
                               key={cellKey}
                               {...restCellProps}
-                              className="table-td py-2"
-                            >
+                              className="table-td py-2">
                               {cell.render("Cell")}
                             </td>
                           );

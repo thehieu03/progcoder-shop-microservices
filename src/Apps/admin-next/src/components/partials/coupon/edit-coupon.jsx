@@ -1,5 +1,5 @@
 "use client";
-"use client";
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
@@ -191,7 +191,7 @@ const EditCoupon = () => {
           {t("editCoupon.title")} #{id}
         </h4>
         <Link
-          to="/coupons"
+          href="/coupons"
           className="btn btn-outline-dark btn-sm inline-flex items-center">
           <Icon icon="heroicons:arrow-left" className="ltr:mr-2 rtl:ml-2" />
           {t("editCoupon.back")}
@@ -492,7 +492,7 @@ const EditCoupon = () => {
                 )}
               </button>
               <Link
-                to="/coupons"
+                href="/coupons"
                 className="btn btn-outline-dark w-full inline-flex items-center justify-center">
                 <Icon
                   icon="heroicons:arrow-left"

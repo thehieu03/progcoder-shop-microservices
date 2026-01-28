@@ -59,7 +59,7 @@ const BlogDetailsPage = () => {
                 />
               </div>
               <div className="flex justify-between mb-4">
-                <Link to="#">
+                <Link href="#">
                   <span className="inline-flex leading-5 text-slate-500 dark:text-slate-500 text-sm font-normal">
                     <Icon
                       icon="heroicons-outline:calendar"
@@ -69,7 +69,7 @@ const BlogDetailsPage = () => {
                   </span>
                 </Link>
                 <div className="flex space-x-4 rtl:space-x-reverse">
-                  <Link to="#">
+                  <Link href="#">
                     <span className="inline-flex leading-5 text-slate-500 dark:text-slate-500 text-sm font-normal">
                       <Icon
                         icon="heroicons-outline:chat"
@@ -78,7 +78,7 @@ const BlogDetailsPage = () => {
                       3
                     </span>
                   </Link>
-                  <Link to="#">
+                  <Link href="#">
                     <span className="inline-flex leading-5 text-slate-500 dark:text-slate-500 text-sm font-normal">
                       <Icon
                         icon="heroicons-outline:share"
@@ -90,7 +90,9 @@ const BlogDetailsPage = () => {
                 </div>
               </div>
               <h5 className="card-title text-slate-900">
-                <Link to="#">At Healthcare you will be treated by caring</Link>
+                <Link href="#">
+                  At Healthcare you will be treated by caring
+                </Link>
               </h5>
               <div className="card-text dark:text-slate-300 mt-4 space-y-4 leading-5 text-slate-600 text-sm border-b border-slate-100 dark:border-slate-700 pb-6">
                 <p>
@@ -155,7 +157,7 @@ const BlogDetailsPage = () => {
                   {tags.map((item, i) => (
                     <li key={i}>
                       <Link
-                        to="#"
+                        href="#"
                         className="text-xs font-normal text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-600 py-1 px-3 rounded-full hover:bg-slate-900 hover:text-white transition duration-150">
                         <span>{item.title}</span>
                       </Link>
@@ -195,7 +197,7 @@ const BlogDetailsPage = () => {
                         </p>
                         <div className="mt-2">
                           <Link
-                            to="#"
+                            href="#"
                             className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse">
                             <span>Reply</span>
                             <Icon
@@ -240,7 +242,7 @@ const BlogDetailsPage = () => {
                             </p>
                             <div className="mt-2">
                               <Link
-                                to="#"
+                                href="#"
                                 className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse">
                                 <span>Reply</span>
                                 <Icon
@@ -287,7 +289,7 @@ const BlogDetailsPage = () => {
                         </p>
                         <div className="mt-2">
                           <Link
-                            to="#"
+                            href="#"
                             className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse">
                             <span>Reply</span>
                             <Icon

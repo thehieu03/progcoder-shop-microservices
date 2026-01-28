@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { homeTable } from "../../../constant/table-data";
+import { homeTable } from "@/constant/table-data";
 
 import Icon from "@/components/ui/Icon";
 
@@ -56,8 +56,7 @@ const COLUMNS = [
           <span
             className={` text-xl
              ${row?.cell?.value > 100 ? "text-success-500" : "text-danger-500"}
-              `}
-          >
+              `}>
             {row?.cell?.value > 100 ? (
               <Icon icon="heroicons:arrow-trending-up" />
             ) : (
@@ -100,7 +99,7 @@ const CompanyTable = () => {
     useGlobalFilter,
     useSortBy,
     usePagination,
-    useRowSelect
+    useRowSelect,
   );
   const {
     getTableProps,
@@ -131,8 +130,7 @@ const CompanyTable = () => {
             <div className="overflow-hidden ">
               <table
                 className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
-                {...getTableProps}
-              >
+                {...getTableProps}>
                 <thead className="bg-slate-200 dark:bg-slate-700">
                   {headerGroups.map((headerGroup) => {
                     const headerGroupProps = headerGroup.getHeaderGroupProps();
@@ -143,7 +141,7 @@ const CompanyTable = () => {
                       <tr key={groupKey} {...restGroupProps}>
                         {headerGroup.headers.map((column) => {
                           const headerProps = column.getHeaderProps(
-                            column.getSortByToggleProps()
+                            column.getSortByToggleProps(),
                           );
                           const { key: columnKey, ...restHeaderProps } =
                             headerProps;
@@ -153,8 +151,7 @@ const CompanyTable = () => {
                               key={columnKey}
                               {...restHeaderProps}
                               scope="col"
-                              className="table-th"
-                            >
+                              className="table-th">
                               {column.render("Header")}
                               <span>
                                 {column.isSorted
@@ -173,8 +170,7 @@ const CompanyTable = () => {
 
                 <tbody
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
-                  {...getTableBodyProps}
-                >
+                  {...getTableBodyProps}>
                   {page.map((row, i) => {
                     prepareRow(row);
                     const { key: rowKey, ...restRowProps } = row.getRowProps();
@@ -188,8 +184,7 @@ const CompanyTable = () => {
                             <td
                               key={cellKey}
                               {...restCellProps}
-                              className="table-td"
-                            >
+                              className="table-td">
                               {cell.render("Cell")}
                             </td>
                           );
@@ -210,8 +205,7 @@ const CompanyTable = () => {
                   !canPreviousPage ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={() => previousPage()}
-                disabled={!canPreviousPage}
-              >
+                disabled={!canPreviousPage}>
                 <Icon icon="heroicons-outline:chevron-left" />
               </button>
             </li>
@@ -225,8 +219,7 @@ const CompanyTable = () => {
                       ? "bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium "
                       : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900  font-normal  "
                   }    text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
-                  onClick={() => gotoPage(pageIdx)}
-                >
+                  onClick={() => gotoPage(pageIdx)}>
                   {page + 1}
                 </button>
               </li>
@@ -237,8 +230,7 @@ const CompanyTable = () => {
                   !canNextPage ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={() => nextPage()}
-                disabled={!canNextPage}
-              >
+                disabled={!canNextPage}>
                 <Icon icon="heroicons-outline:chevron-right" />
               </button>
             </li>

@@ -43,13 +43,13 @@ const MobileMenu = ({ className = "custom-class" }) => {
             <div className="logo-icon">
               {!isDark && !isSemiDark ? (
                 <img
-                  src={MobileLogo}
+                  src={MobileLogo.src || MobileLogo}
                   alt=""
                   style={{ width: "32px", height: "32px" }}
                 />
               ) : (
                 <img
-                  src={MobileLogoWhite}
+                  src={MobileLogoWhite.src || MobileLogoWhite}
                   alt=""
                   style={{ width: "32px", height: "32px" }}
                 />
@@ -80,7 +80,7 @@ const MobileMenu = ({ className = "custom-class" }) => {
         <Navmenu menus={menuItems} />
         <div className="bg-slate-900 mb-24 lg:mb-10 mt-24 p-4 relative text-center rounded-2xl text-white">
           <img
-            src={svgRabitImage}
+            src={svgRabitImage.src || svgRabitImage}
             alt=""
             className="mx-auto relative -mt-[73px]"
           />

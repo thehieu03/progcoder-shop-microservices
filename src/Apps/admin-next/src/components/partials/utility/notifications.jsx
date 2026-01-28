@@ -53,7 +53,7 @@ const IndeterminateCheckbox = React.forwardRef(
 
 const NotificationPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
@@ -137,7 +137,7 @@ const NotificationPage = () => {
 
     // Navigate if targetUrl exists
     if (notification.targetUrl) {
-      navigate(notification.targetUrl);
+      router.push(notification.targetUrl);
     }
   };
 

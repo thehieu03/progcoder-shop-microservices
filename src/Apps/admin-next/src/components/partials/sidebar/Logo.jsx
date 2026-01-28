@@ -33,13 +33,13 @@ const SidebarLogo = ({ menuHover }) => {
           <div className="logo-icon">
             {!isDark && !isSemiDark ? (
               <img
-                src={MobileLogo}
+                src={MobileLogo.src || MobileLogo}
                 alt=""
                 style={{ width: "32px", height: "32px" }}
               />
             ) : (
               <img
-                src={MobileLogoWhite}
+                src={MobileLogoWhite.src || MobileLogoWhite}
                 alt=""
                 style={{ width: "32px", height: "32px" }}
               />

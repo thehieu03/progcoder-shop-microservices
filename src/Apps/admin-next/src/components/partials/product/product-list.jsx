@@ -189,7 +189,7 @@ const Ecommerce = () => {
               </div>
               <div className="min-w-0">
                 <Link
-                  to={`/products/${product?.id}`}
+                  href={`/products/${product?.id}`}
                   className="font-medium text-slate-800 dark:text-slate-200 hover:text-primary-500 truncate block max-w-[250px]">
                   {product?.name}
                 </Link>
@@ -309,7 +309,7 @@ const Ecommerce = () => {
                 placement="top"
                 arrow
                 animation="shift-away">
-                <Link to={`/products/${product?.id}`} className="action-btn">
+                <Link href={`/products/${product?.id}`} className="action-btn">
                   <Icon icon="heroicons:eye" />
                 </Link>
               </Tooltip>
@@ -319,7 +319,7 @@ const Ecommerce = () => {
                 arrow
                 animation="shift-away">
                 <Link
-                  to={`/edit-product/${product?.id}`}
+                  href={`/edit-product/${product?.id}`}
                   className="action-btn">
                   <Icon icon="heroicons:pencil-square" />
                 </Link>
@@ -507,7 +507,7 @@ const Ecommerce = () => {
                 {t("products.exportExcel")}
               </button>
               <Link
-                to="/create-product"
+                href="/create-product"
                 className="btn btn-dark btn-sm inline-flex items-center">
                 <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
                 {t("products.createNew")}

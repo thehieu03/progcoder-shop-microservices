@@ -1,5 +1,5 @@
 "use client";
-"use client";
+
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
@@ -562,7 +562,9 @@ const CouponPage = () => {
                 placement="top"
                 arrow
                 animation="shift-away">
-                <Link to={`/edit-coupon/${coupon?.id}`} className="action-btn">
+                <Link
+                  href={`/edit-coupon/${coupon?.id}`}
+                  className="action-btn">
                   <Icon icon="heroicons:pencil-square" />
                 </Link>
               </Tooltip>
@@ -642,7 +644,7 @@ const CouponPage = () => {
               {loading ? t("common.refreshing") : t("common.refresh")}
             </button>
             <Link
-              to="/create-coupon"
+              href="/create-coupon"
               className="btn btn-dark btn-sm inline-flex items-center">
               <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
               {t("coupon.createNew")}
@@ -1033,7 +1035,7 @@ const CouponPage = () => {
                 {t("common.close")}
               </button>
               <Link
-                to={`/edit-coupon/${viewingCoupon.id}`}
+                href={`/edit-coupon/${viewingCoupon.id}`}
                 className="btn btn-dark inline-flex items-center">
                 <Icon
                   icon="heroicons:pencil-square"
