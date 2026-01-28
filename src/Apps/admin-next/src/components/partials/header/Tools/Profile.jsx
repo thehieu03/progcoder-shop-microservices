@@ -15,7 +15,8 @@ const Profile = () => {
   const { logout, getUserInfo } = useKeycloak();
   const user = useSelector((state) => state.auth.user);
 
-  const userInfo = getUserInfo() || user;
+  // In Test Mode/Redux, user is already set. No need to call service directly which might fail.
+  const userInfo = user;
   const displayName =
     userInfo?.name || userInfo?.username || userInfo?.email || "User";
 

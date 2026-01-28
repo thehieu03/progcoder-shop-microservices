@@ -3,8 +3,9 @@ import { toast } from "react-toastify";
 import i18n from "@/i18n/config";
 
 // Get the API Gateway URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_GATEWAY || "not_config";
-const KEYCLOAK_BASE_URL = import.meta.env.VITE_KEYCLOAK_BASE_URL || "not_config";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY || "not_config";
+const KEYCLOAK_BASE_URL =
+  process.env.NEXT_PUBLIC_KEYCLOAK_BASE_URL || "not_config";
 
 // Helper function to get cookie by name
 const getCookie = (name) => {
@@ -33,13 +34,15 @@ const toastConfig = {
 const showErrorToast = (errorKey, details) => {
   const translationKey = `error_response.${errorKey}`;
   const defaultKey = "error_response.DEFAULT_ERROR";
-  
+
   // Check if translation exists for the error key
   const translatedMessage = i18n.exists(translationKey)
     ? i18n.t(translationKey)
     : i18n.t(defaultKey);
-  
-  const message = details ? `${translatedMessage}: ${details}` : translatedMessage;
+
+  const message = details
+    ? `${translatedMessage}: ${details}`
+    : translatedMessage;
   toast.error(message, toastConfig);
 };
 
@@ -49,7 +52,7 @@ const showErrorToast = (errorKey, details) => {
  */
 const handleErrorResponse = (response) => {
   const data = response?.data;
-  
+
   // Check if response has errors array
   if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
     // Show toast for each error message
@@ -116,16 +119,16 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // Get token from cookie
     const token = getCookie("access_token");
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Keycloak request interceptor - Add Bearer token from cookie
@@ -133,16 +136,16 @@ keycloakAxiosInstance.interceptors.request.use(
   (config) => {
     // Get token from cookie
     const token = getCookie("access_token");
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor - Handle errors globally
@@ -152,14 +155,15 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const { response } = error;
-    
+
     if (response) {
       // Handle API error response
       handleErrorResponse(response);
-      
+
       // Special handling for 401 - redirect to login
       if (response.status === 401) {
-        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+          "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         window.location.href = "/login";
       }
     } else if (error.request) {
@@ -169,9 +173,9 @@ axiosInstance.interceptors.response.use(
       // Something else happened
       showErrorToast("DEFAULT_ERROR");
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 // Keycloak response interceptor - Handle errors globally
@@ -181,14 +185,15 @@ keycloakAxiosInstance.interceptors.response.use(
   },
   (error) => {
     const { response } = error;
-    
+
     if (response) {
       // Handle API error response
       handleErrorResponse(response);
-      
+
       // Special handling for 401 - redirect to login
       if (response.status === 401) {
-        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+          "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         window.location.href = "/login";
       }
     } else if (error.request) {
@@ -198,9 +203,9 @@ keycloakAxiosInstance.interceptors.response.use(
       // Something else happened
       showErrorToast("DEFAULT_ERROR");
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 // Export helper methods for common HTTP operations
@@ -213,8 +218,14 @@ export const api = {
         baseURL: config.baseURL,
       });
       // Add interceptors
-      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
-      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      customInstance.interceptors.request.use(
+        axiosInstance.interceptors.request.handlers[0].fulfilled,
+        axiosInstance.interceptors.request.handlers[0].rejected,
+      );
+      customInstance.interceptors.response.use(
+        axiosInstance.interceptors.response.handlers[0].fulfilled,
+        axiosInstance.interceptors.response.handlers[0].rejected,
+      );
       return customInstance.get(url, { ...config, baseURL: undefined });
     }
     return axiosInstance.get(url, config);
@@ -225,8 +236,14 @@ export const api = {
         ...axiosInstance.defaults,
         baseURL: config.baseURL,
       });
-      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
-      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      customInstance.interceptors.request.use(
+        axiosInstance.interceptors.request.handlers[0].fulfilled,
+        axiosInstance.interceptors.request.handlers[0].rejected,
+      );
+      customInstance.interceptors.response.use(
+        axiosInstance.interceptors.response.handlers[0].fulfilled,
+        axiosInstance.interceptors.response.handlers[0].rejected,
+      );
       return customInstance.post(url, data, { ...config, baseURL: undefined });
     }
     return axiosInstance.post(url, data, config);
@@ -237,8 +254,14 @@ export const api = {
         ...axiosInstance.defaults,
         baseURL: config.baseURL,
       });
-      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
-      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      customInstance.interceptors.request.use(
+        axiosInstance.interceptors.request.handlers[0].fulfilled,
+        axiosInstance.interceptors.request.handlers[0].rejected,
+      );
+      customInstance.interceptors.response.use(
+        axiosInstance.interceptors.response.handlers[0].fulfilled,
+        axiosInstance.interceptors.response.handlers[0].rejected,
+      );
       return customInstance.put(url, data, { ...config, baseURL: undefined });
     }
     return axiosInstance.put(url, data, config);
@@ -249,8 +272,14 @@ export const api = {
         ...axiosInstance.defaults,
         baseURL: config.baseURL,
       });
-      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
-      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      customInstance.interceptors.request.use(
+        axiosInstance.interceptors.request.handlers[0].fulfilled,
+        axiosInstance.interceptors.request.handlers[0].rejected,
+      );
+      customInstance.interceptors.response.use(
+        axiosInstance.interceptors.response.handlers[0].fulfilled,
+        axiosInstance.interceptors.response.handlers[0].rejected,
+      );
       return customInstance.patch(url, data, { ...config, baseURL: undefined });
     }
     return axiosInstance.patch(url, data, config);
@@ -261,8 +290,14 @@ export const api = {
         ...axiosInstance.defaults,
         baseURL: config.baseURL,
       });
-      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
-      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      customInstance.interceptors.request.use(
+        axiosInstance.interceptors.request.handlers[0].fulfilled,
+        axiosInstance.interceptors.request.handlers[0].rejected,
+      );
+      customInstance.interceptors.response.use(
+        axiosInstance.interceptors.response.handlers[0].fulfilled,
+        axiosInstance.interceptors.response.handlers[0].rejected,
+      );
       return customInstance.delete(url, { ...config, baseURL: undefined });
     }
     return axiosInstance.delete(url, config);
@@ -290,7 +325,7 @@ const createAxiosInstanceWithBaseURL = (baseURL) => {
     },
     (error) => {
       return Promise.reject(error);
-    }
+    },
   );
 
   // Add response interceptor
@@ -300,12 +335,13 @@ const createAxiosInstanceWithBaseURL = (baseURL) => {
     },
     (error) => {
       const { response } = error;
-      
+
       if (response) {
         handleErrorResponse(response);
-        
+
         if (response.status === 401) {
-          document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie =
+            "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           window.location.href = "/login";
         }
       } else if (error.request) {
@@ -313,9 +349,9 @@ const createAxiosInstanceWithBaseURL = (baseURL) => {
       } else {
         showErrorToast("DEFAULT_ERROR");
       }
-      
+
       return Promise.reject(error);
-    }
+    },
   );
 
   return instance;

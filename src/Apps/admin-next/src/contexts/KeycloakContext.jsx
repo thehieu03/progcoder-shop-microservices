@@ -43,6 +43,27 @@ export const KeycloakProvider = ({ children }) => {
   useEffect(() => {
     const initializeKeycloak = async () => {
       try {
+        // TEMPORARY: Mock Auth for testing
+        if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true" || true) {
+          // Force true for now as requested
+          console.log("Keycloak: Using MOCK authentication");
+          setKeycloakReady(true);
+          setAuthenticated(true);
+          dispatch(
+            setUser({
+              id: "mock-user-id",
+              username: "testuser",
+              email: "test@example.com",
+              firstName: "Test",
+              lastName: "User",
+              name: "Test User",
+              roles: ["admin"],
+            }),
+          );
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
 
         // Try to initialize Keycloak

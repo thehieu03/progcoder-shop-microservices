@@ -11,11 +11,31 @@ import "flatpickr/dist/themes/light.css";
 import "../assets/css/app.css";
 import "../i18n/config"; // Initialize i18n
 
+// Import MirageJS server
+import { makeServer } from "@/api/mockServer";
+
 export default function AppProviders({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Initialize MirageJS Mock Server
+  React.useEffect(() => {
+    // Check if mock data is enabled (force true for this user request)
+    const useMockData =
+      process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true" || true;
+
+    if (useMockData && typeof window !== "undefined") {
+      // Avoid starting twice in strict mode
+      // @ts-ignore
+      if (!window.server) {
+        // @ts-ignore
+        window.server = makeServer({ environment: "development" });
+        console.log("MirageJS Mock Server initialized");
+      }
+    }
+  }, []);
+
   return (
     <StoreProvider>
       <KeycloakProvider>

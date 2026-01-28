@@ -3,40 +3,31 @@ import { createSlice } from "@reduxjs/toolkit";
 // theme config import
 import themeConfig from "@/configs/themeConfig";
 
-const initialDarkMode = () => {
-  const item = window.localStorage.getItem("darkMode");
-  return item ? JSON.parse(item) : themeConfig.layout.darkMode;
+// Helper to safely get from local storage
+const getFromLocalStorage = (key, defaultValue) => {
+  if (typeof window === "undefined") {
+    return defaultValue;
+  }
+  const item = window.localStorage.getItem(key);
+  try {
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (error) {
+    return defaultValue;
+  }
 };
 
-const initialSidebarCollapsed = () => {
-  const item = window.localStorage.getItem("sidebarCollapsed");
-  return item ? JSON.parse(item) : themeConfig.layout.menu.isCollapsed;
-};
-
-const initialSemiDarkMode = () => {
-  const item = window.localStorage.getItem("semiDarkMode");
-  return item ? JSON.parse(item) : themeConfig.layout.semiDarkMode;
-};
-
-const initialRtl = () => {
-  const item = window.localStorage.getItem("direction");
-  return item ? JSON.parse(item) : themeConfig.layout.isRTL;
-};
-
-const initialSkin = () => {
-  const item = window.localStorage.getItem("skin");
-  return item ? JSON.parse(item) : themeConfig.layout.skin;
-};
-
-const initialType = () => {
-  const item = window.localStorage.getItem("type");
-  return item ? JSON.parse(item) : themeConfig.layout.type;
-};
-
-const initialMonochrome = () => {
-  const item = window.localStorage.getItem("monochrome");
-  return item ? JSON.parse(item) : themeConfig.layout.isMonochrome;
-};
+const initialDarkMode = () =>
+  getFromLocalStorage("darkMode", themeConfig.layout.darkMode);
+const initialSidebarCollapsed = () =>
+  getFromLocalStorage("sidebarCollapsed", themeConfig.layout.menu.isCollapsed);
+const initialSemiDarkMode = () =>
+  getFromLocalStorage("semiDarkMode", themeConfig.layout.semiDarkMode);
+const initialRtl = () =>
+  getFromLocalStorage("direction", themeConfig.layout.isRTL);
+const initialSkin = () => getFromLocalStorage("skin", themeConfig.layout.skin);
+const initialType = () => getFromLocalStorage("type", themeConfig.layout.type);
+const initialMonochrome = () =>
+  getFromLocalStorage("monochrome", themeConfig.layout.isMonochrome);
 const initialState = {
   isRTL: initialRtl(),
   darkMode: initialDarkMode(),

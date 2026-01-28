@@ -1,4 +1,4 @@
-import EditInventory from "@/pages-legacy/inventory/edit-inventory";
+import EditInventory from "@/components/partials/inventory/edit-inventory";
 
 export default function EditInventoryPage() {
   return <EditInventory />;

@@ -1,4 +1,4 @@
-import EditOrder from "@/pages-legacy/orders/edit";
+import EditOrder from "@/components/partials/orders/edit";
 
 export default function EditOrderPage() {
   return <EditOrder />;

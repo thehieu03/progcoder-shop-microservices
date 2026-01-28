@@ -1,6 +1,6 @@
 "use client";
 
-import FaqPage from "@/pages-legacy/utility/faq";
+import FaqPage from "@/components/partials/utility/faq";
 
 export default function Faq() {
   return <FaqPage />;

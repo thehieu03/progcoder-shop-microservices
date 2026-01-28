@@ -1,4 +1,4 @@
-import InvoicePage from "@/pages-legacy/utility/invoice";
+import InvoicePage from "@/components/partials/invoice/index";
 
 export default function InvoicePageWrapper() {
   return <InvoicePage />;

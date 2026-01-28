@@ -1,16 +1,20 @@
-import Keycloak from 'keycloak-js';
+import Keycloak from "keycloak-js";
 
 // Get configuration from environment variables
 const keycloakConfig = {
-  url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8080',
-  realm: import.meta.env.VITE_KEYCLOAK_REALM || 'your-realm-name',
-  clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'your-client-id',
-  redirectUri: import.meta.env.VITE_KEYCLOAK_REDIRECT_URI || window.location.origin + '/ecommerce',
+  url: process.env.NEXT_PUBLIC_KEYCLOAK_URL || "http://localhost:8080",
+  realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM || "your-realm-name",
+  clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID || "your-client-id",
+  redirectUri:
+    process.env.NEXT_PUBLIC_KEYCLOAK_REDIRECT_URI ||
+    (typeof window !== "undefined"
+      ? window.location.origin + "/ecommerce"
+      : ""),
 };
 
 // Log configuration for debugging (only in development)
-if (import.meta.env.DEV) {
-  console.log('Keycloak Configuration:', {
+if (process.env.NODE_ENV === "development") {
+  console.log("Keycloak Configuration:", {
     url: keycloakConfig.url,
     realm: keycloakConfig.realm,
     clientId: keycloakConfig.clientId,
@@ -28,15 +32,15 @@ if (import.meta.env.DEV) {
  */
 const setCookie = (name, value, days = 1) => {
   const date = new Date();
-  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
   const expires = `expires=${date.toUTCString()}`;
-  
+
   // Set secure flag only in production (HTTPS)
-  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-  
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+
   document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Lax${secure}`;
-  
-  if (import.meta.env.DEV) {
+
+  if (process.env.NODE_ENV === "development") {
     console.log(`Cookie set: ${name}`);
   }
 };
@@ -47,8 +51,8 @@ const setCookie = (name, value, days = 1) => {
  */
 const deleteCookie = (name) => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-  
-  if (import.meta.env.DEV) {
+
+  if (process.env.NODE_ENV === "development") {
     console.log(`Cookie deleted: ${name}`);
   }
 };
@@ -60,7 +64,7 @@ const deleteCookie = (name) => {
 const setAccessTokenCookie = (token) => {
   if (token) {
     // Set cookie to expire in 1 day (token refresh will update it)
-    setCookie('access_token', token, 1);
+    setCookie("access_token", token, 1);
   }
 };
 
@@ -68,7 +72,7 @@ const setAccessTokenCookie = (token) => {
  * Delete access token cookie
  */
 const deleteAccessTokenCookie = () => {
-  deleteCookie('access_token');
+  deleteCookie("access_token");
 };
 
 // ==================== Keycloak Instance ====================
@@ -94,8 +98,8 @@ export const initKeycloak = (initOptions = {}) => {
 
   // Set up event callbacks
   keycloakInstance.onAuthSuccess = () => {
-    if (import.meta.env.DEV) {
-      console.log('Keycloak: Authentication successful');
+    if (process.env.NODE_ENV === "development") {
+      console.log("Keycloak: Authentication successful");
     }
     // Set access token cookie on successful authentication
     if (keycloakInstance.token) {
@@ -104,8 +108,8 @@ export const initKeycloak = (initOptions = {}) => {
   };
 
   keycloakInstance.onAuthRefreshSuccess = () => {
-    if (import.meta.env.DEV) {
-      console.log('Keycloak: Token refresh successful');
+    if (process.env.NODE_ENV === "development") {
+      console.log("Keycloak: Token refresh successful");
     }
     // Update access token cookie after refresh
     if (keycloakInstance.token) {
@@ -114,49 +118,54 @@ export const initKeycloak = (initOptions = {}) => {
   };
 
   keycloakInstance.onAuthLogout = () => {
-    if (import.meta.env.DEV) {
-      console.log('Keycloak: User logged out');
+    if (process.env.NODE_ENV === "development") {
+      console.log("Keycloak: User logged out");
     }
     // Delete access token cookie on logout
     deleteAccessTokenCookie();
   };
 
   keycloakInstance.onTokenExpired = () => {
-    if (import.meta.env.DEV) {
-      console.log('Keycloak: Token expired, attempting refresh...');
+    if (process.env.NODE_ENV === "development") {
+      console.log("Keycloak: Token expired, attempting refresh...");
     }
     // Try to refresh the token
-    keycloakInstance.updateToken(30).then((refreshed) => {
-      if (refreshed) {
-        if (import.meta.env.DEV) {
-          console.log('Keycloak: Token refreshed successfully');
+    keycloakInstance
+      .updateToken(30)
+      .then((refreshed) => {
+        if (refreshed) {
+          if (process.env.NODE_ENV === "development") {
+            console.log("Keycloak: Token refreshed successfully");
+          }
+          setAccessTokenCookie(keycloakInstance.token);
         }
-        setAccessTokenCookie(keycloakInstance.token);
-      }
-    }).catch(() => {
-      console.warn('Keycloak: Failed to refresh token, user may need to re-login');
-      deleteAccessTokenCookie();
-    });
+      })
+      .catch(() => {
+        console.warn(
+          "Keycloak: Failed to refresh token, user may need to re-login",
+        );
+        deleteAccessTokenCookie();
+      });
   };
 
   keycloakInstance.onAuthError = (error) => {
-    console.error('Keycloak: Authentication error', error);
+    console.error("Keycloak: Authentication error", error);
     deleteAccessTokenCookie();
   };
 
   const defaultInitOptions = {
-    onLoad: 'check-sso',
+    onLoad: "check-sso",
     checkLoginIframe: false,
-    pkceMethod: 'S256',
+    pkceMethod: "S256",
     // Ensure we use the configured redirect URI
     redirectUri: keycloakConfig.redirectUri,
   };
 
   const finalInitOptions = { ...defaultInitOptions, ...initOptions };
-  
+
   // Log for debugging
-  if (import.meta.env.DEV) {
-    console.log('Initializing Keycloak with options:', {
+  if (process.env.NODE_ENV === "development") {
+    console.log("Initializing Keycloak with options:", {
       ...finalInitOptions,
       // Don't log the full redirectUri if it's very long
       redirectUri: finalInitOptions.redirectUri,
@@ -167,8 +176,8 @@ export const initKeycloak = (initOptions = {}) => {
     if (authenticated && keycloakInstance.token) {
       // Set access token cookie if already authenticated (e.g., SSO)
       setAccessTokenCookie(keycloakInstance.token);
-      if (import.meta.env.DEV) {
-        console.log('Keycloak: User is authenticated via SSO');
+      if (process.env.NODE_ENV === "development") {
+        console.log("Keycloak: User is authenticated via SSO");
       }
     } else {
       // Make sure cookie is cleared if not authenticated
@@ -184,7 +193,9 @@ export const initKeycloak = (initOptions = {}) => {
  */
 export const getKeycloak = () => {
   if (!keycloakInstance) {
-    throw new Error('Keycloak has not been initialized. Call initKeycloak() first.');
+    throw new Error(
+      "Keycloak has not been initialized. Call initKeycloak() first.",
+    );
   }
   return keycloakInstance;
 };
@@ -204,12 +215,12 @@ export const getRedirectUri = () => {
 export const login = (options = {}) => {
   const keycloak = getKeycloak();
   const redirectUri = options.redirectUri || keycloakConfig.redirectUri;
-  
+
   // Log for debugging
-  if (import.meta.env.DEV) {
-    console.log('Keycloak login called with redirectUri:', redirectUri);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Keycloak login called with redirectUri:", redirectUri);
   }
-  
+
   keycloak.login({
     redirectUri: redirectUri,
     ...options,
@@ -222,10 +233,10 @@ export const login = (options = {}) => {
  */
 export const logout = (options = {}) => {
   const keycloak = getKeycloak();
-  
+
   // Delete access token cookie before logout
   deleteAccessTokenCookie();
-  
+
   keycloak.logout({
     redirectUri: window.location.origin,
     ...options,
@@ -273,14 +284,17 @@ export const getUserInfo = () => {
   if (keycloak.tokenParsed) {
     const tokenParsed = keycloak.tokenParsed;
     return {
-      id: tokenParsed.sub || keycloak.subject || 'unknown',
-      username: tokenParsed.preferred_username || tokenParsed.username || 'user',
-      email: tokenParsed.email || '',
-      firstName: tokenParsed.given_name || '',
-      lastName: tokenParsed.family_name || '',
-      name: tokenParsed.name || (tokenParsed.given_name && tokenParsed.family_name 
-        ? `${tokenParsed.given_name} ${tokenParsed.family_name}` 
-        : tokenParsed.preferred_username || 'User'),
+      id: tokenParsed.sub || keycloak.subject || "unknown",
+      username:
+        tokenParsed.preferred_username || tokenParsed.username || "user",
+      email: tokenParsed.email || "",
+      firstName: tokenParsed.given_name || "",
+      lastName: tokenParsed.family_name || "",
+      name:
+        tokenParsed.name ||
+        (tokenParsed.given_name && tokenParsed.family_name
+          ? `${tokenParsed.given_name} ${tokenParsed.family_name}`
+          : tokenParsed.preferred_username || "User"),
       roles: tokenParsed.realm_access?.roles || [],
       ...tokenParsed,
     };
@@ -291,32 +305,34 @@ export const getUserInfo = () => {
   if (keycloak.token) {
     try {
       // Try to decode JWT token manually as fallback
-      const base64Url = keycloak.token.split('.')[1];
+      const base64Url = keycloak.token.split(".")[1];
       if (base64Url) {
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
         const jsonPayload = decodeURIComponent(
           atob(base64)
-            .split('')
-            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join(""),
         );
         const decoded = JSON.parse(jsonPayload);
-        
+
         return {
-          id: decoded.sub || keycloak.subject || 'unknown',
-          username: decoded.preferred_username || decoded.username || 'user',
-          email: decoded.email || '',
-          firstName: decoded.given_name || '',
-          lastName: decoded.family_name || '',
-          name: decoded.name || (decoded.given_name && decoded.family_name 
-            ? `${decoded.given_name} ${decoded.family_name}` 
-            : decoded.preferred_username || 'User'),
+          id: decoded.sub || keycloak.subject || "unknown",
+          username: decoded.preferred_username || decoded.username || "user",
+          email: decoded.email || "",
+          firstName: decoded.given_name || "",
+          lastName: decoded.family_name || "",
+          name:
+            decoded.name ||
+            (decoded.given_name && decoded.family_name
+              ? `${decoded.given_name} ${decoded.family_name}`
+              : decoded.preferred_username || "User"),
           roles: decoded.realm_access?.roles || [],
           ...decoded,
         };
       }
     } catch (error) {
-      console.warn('Failed to decode token manually:', error);
+      console.warn("Failed to decode token manually:", error);
     }
   }
 
@@ -324,11 +340,11 @@ export const getUserInfo = () => {
   if (keycloak.subject) {
     return {
       id: keycloak.subject,
-      username: 'user',
-      email: '',
-      firstName: '',
-      lastName: '',
-      name: 'User',
+      username: "user",
+      email: "",
+      firstName: "",
+      lastName: "",
+      name: "User",
       roles: [],
     };
   }

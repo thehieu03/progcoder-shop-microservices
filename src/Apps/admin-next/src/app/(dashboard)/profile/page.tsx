@@ -1,4 +1,4 @@
-import Profile from "@/pages-legacy/utility/profile";
+import Profile from "@/components/partials/utility/profile";
 
 export default function ProfilePage() {
   return <Profile />;

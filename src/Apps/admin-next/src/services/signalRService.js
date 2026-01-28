@@ -31,8 +31,10 @@ class SignalRService {
    * @returns {string} Hub URL
    */
   getHubUrl() {
-    const apiGateway = import.meta.env.VITE_API_GATEWAY || "";
-    const hubPath = API_ENDPOINTS.COMMUNICATION?.NOTIFICATION_HUB || "/communication-service/hubs/notifications";
+    const apiGateway = process.env.NEXT_PUBLIC_API_GATEWAY || "";
+    const hubPath =
+      API_ENDPOINTS.COMMUNICATION?.NOTIFICATION_HUB ||
+      "/communication-service/hubs/notifications";
     return `${apiGateway}${hubPath}`;
   }
 
@@ -80,7 +82,7 @@ class SignalRService {
     connection.onclose((error) => {
       this.isConnected = false;
       console.log("SignalR: Connection closed", error);
-      
+
       if (error) {
         console.error("SignalR: Connection closed due to error", error);
       }
@@ -132,7 +134,7 @@ class SignalRService {
     } catch (error) {
       this.isConnected = false;
       console.error("SignalR: Connection failed", error);
-      
+
       // Log more details about the error
       if (error.message) {
         console.error("SignalR: Error message:", error.message);
@@ -140,11 +142,12 @@ class SignalRService {
       if (error.stack) {
         console.error("SignalR: Error stack:", error.stack);
       }
-      
+
       // Don't retry if it's an authentication error or negotiation error
-      const isNegotiationError = error.message?.includes("negotiation") || 
-                                  error.message?.includes("Failed to fetch");
-      
+      const isNegotiationError =
+        error.message?.includes("negotiation") ||
+        error.message?.includes("Failed to fetch");
+
       if (isNegotiationError) {
         console.error("SignalR: Negotiation failed. This might be due to:");
         console.error("  1. Service not running");
@@ -155,18 +158,20 @@ class SignalRService {
         // Don't retry on negotiation errors - they won't succeed
         return;
       }
-      
+
       // Retry connection after delay for other errors
       if (this.reconnectAttempts < this.maxReconnectAttempts) {
         this.reconnectAttempts++;
-        console.log(`SignalR: Retrying connection (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
+        console.log(
+          `SignalR: Retrying connection (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`,
+        );
         setTimeout(() => {
           this.connect();
         }, this.reconnectDelay);
       } else {
         console.error("SignalR: Max reconnection attempts reached");
       }
-      
+
       throw error;
     }
   }
@@ -179,17 +184,24 @@ class SignalRService {
 
     this.connection.on("ReceiveNotification", (notification) => {
       console.log("SignalR: Received notification", notification);
-      console.log(`SignalR: Calling ${this.callbacks.size} registered callbacks`);
-      
+      console.log(
+        `SignalR: Calling ${this.callbacks.size} registered callbacks`,
+      );
+
       // Call all registered callbacks
       let callbackIndex = 0;
       this.callbacks.forEach((callback, key) => {
         try {
           callbackIndex++;
-          console.log(`SignalR: Calling callback #${callbackIndex} (key: ${key})`);
+          console.log(
+            `SignalR: Calling callback #${callbackIndex} (key: ${key})`,
+          );
           callback(notification);
         } catch (error) {
-          console.error(`SignalR: Error in notification callback (key: ${key})`, error);
+          console.error(
+            `SignalR: Error in notification callback (key: ${key})`,
+            error,
+          );
         }
       });
     });
@@ -219,7 +231,9 @@ class SignalRService {
     }
 
     this.callbacks.set(key, callback);
-    console.log(`SignalR: Callback registered with key: ${key}. Total: ${this.callbacks.size}`);
+    console.log(
+      `SignalR: Callback registered with key: ${key}. Total: ${this.callbacks.size}`,
+    );
 
     // Return unsubscribe function
     return () => this.offNotificationByKey(key);
@@ -233,7 +247,9 @@ class SignalRService {
   offNotificationByKey(key) {
     if (this.callbacks.has(key)) {
       this.callbacks.delete(key);
-      console.log(`SignalR: Callback unregistered for key: ${key}. Total: ${this.callbacks.size}`);
+      console.log(
+        `SignalR: Callback unregistered for key: ${key}. Total: ${this.callbacks.size}`,
+      );
       return true;
     }
     console.warn(`SignalR: No callback found for key: ${key}`);
@@ -279,7 +295,10 @@ class SignalRService {
    * @returns {boolean}
    */
   getConnected() {
-    return this.isConnected && this.connection?.state === signalR.HubConnectionState.Connected;
+    return (
+      this.isConnected &&
+      this.connection?.state === signalR.HubConnectionState.Connected
+    );
   }
 }
 

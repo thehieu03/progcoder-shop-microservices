@@ -1,4 +1,4 @@
-import CreateOrder from "@/pages-legacy/orders/create";
+import CreateOrder from "@/components/partials/orders/create";
 
 export default function CreateOrderPage() {
   return <CreateOrder />;

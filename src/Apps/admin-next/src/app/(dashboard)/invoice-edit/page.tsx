@@ -1,4 +1,4 @@
-import InvoiceEditPage from "@/pages-legacy/utility/invoice-edit";
+import InvoiceEditPage from "@/components/partials/invoice/invoice-edit";
 
 export default function InvoiceEditPageWrapper() {
   return <InvoiceEditPage />;

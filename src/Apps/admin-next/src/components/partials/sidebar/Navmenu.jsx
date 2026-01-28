@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Collapse } from "react-collapse";
 import Icon from "@/components/ui/Icon";
-import { toggleActiveChat } from "@/pages/app/chat/store"; // This path might need fix if pages moved
+// import { toggleActiveChat } from "@/pages/app/chat/store"; // This path might need fix if pages moved
 import { useDispatch } from "react-redux";
 import useMobileMenu from "@/hooks/useMobileMenu";
 import Submenu from "./Submenu";

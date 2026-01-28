@@ -1,16 +1,19 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
+
 export default function useWidth() {
-  const [width, setWidth] = useState(window.innerWidth);
-  // breakpoints
+  const [width, setWidth] = useState(0); // Default to 0 or a sensible default for SSR
+
   const breakpoints = {
-    sm: "640",
-    md: "768",
-    lg: "1024",
-    xl: "1280",
+    sm: 640,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
   };
 
-  // resize widnow size and set width by useMemo
-  useMemo(() => {
+  useEffect(() => {
+    // Set initial width on client mount
+    setWidth(window.innerWidth);
+
     const handleResize = () => {
       setWidth(window.innerWidth);
     };
