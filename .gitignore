@@ -65,3 +65,6 @@ local-data/
 /docker-volumes
 docker-volumes/
 .fake
+
+# 100 days
+100-days/

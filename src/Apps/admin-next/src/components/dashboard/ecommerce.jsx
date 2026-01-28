@@ -42,9 +42,17 @@ const Ecommerce = () => {
     }
   };
 
-  const registerRefresh = (key) => (refreshFn) => {
-    setRefreshFunctions((prev) => ({ ...prev, [key]: refreshFn }));
-  };
+  const onRefreshStatistics = useCallback((refreshFn) => {
+    setRefreshFunctions((prev) => ({ ...prev, statistics: refreshFn }));
+  }, []);
+
+  const onRefreshOrderGrowth = useCallback((refreshFn) => {
+    setRefreshFunctions((prev) => ({ ...prev, orderGrowth: refreshFn }));
+  }, []);
+
+  const onRefreshTopProducts = useCallback((refreshFn) => {
+    setRefreshFunctions((prev) => ({ ...prev, topProducts: refreshFn }));
+  }, []);
 
   return (
     <div>
@@ -73,7 +81,7 @@ const Ecommerce = () => {
             </Tooltip>
           </div>
           <div className="grid md:grid-cols-4 grid-cols-1 gap-4">
-            <GroupChart2 onRefresh={registerRefresh("statistics")} />
+            <GroupChart2 onRefresh={onRefreshStatistics} />
           </div>
         </div>
       </div>
@@ -101,7 +109,7 @@ const Ecommerce = () => {
             <div className="legend-ring">
               <OrderGrowthLineChart
                 height={420}
-                onRefresh={registerRefresh("orderGrowth")}
+                onRefresh={onRefreshOrderGrowth}
               />
             </div>
           </Card>
@@ -131,7 +139,7 @@ const Ecommerce = () => {
             <div className="legend-ring">
               <TopProductsPieChart
                 height={420}
-                onRefresh={registerRefresh("topProducts")}
+                onRefresh={onRefreshTopProducts}
               />
             </div>
           </Card>

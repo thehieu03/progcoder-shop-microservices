@@ -3,8 +3,9 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Textinput from "@/components/ui/Textinput";
 import Textarea from "@/components/ui/Textarea";
+("use client");
 import Icon from "@/components/ui/Icon";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Sidebar from "./Sidebar";
 
 // import images
@@ -155,8 +156,7 @@ const BlogDetailsPage = () => {
                     <li key={i}>
                       <Link
                         to="#"
-                        className="text-xs font-normal text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-600 py-1 px-3 rounded-full hover:bg-slate-900 hover:text-white transition duration-150"
-                      >
+                        className="text-xs font-normal text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-600 py-1 px-3 rounded-full hover:bg-slate-900 hover:text-white transition duration-150">
                         <span>{item.title}</span>
                       </Link>
                     </li>
@@ -196,8 +196,7 @@ const BlogDetailsPage = () => {
                         <div className="mt-2">
                           <Link
                             to="#"
-                            className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse"
-                          >
+                            className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse">
                             <span>Reply</span>
                             <Icon
                               icon="heroicons:arrow-right-20-solid"
@@ -242,8 +241,7 @@ const BlogDetailsPage = () => {
                             <div className="mt-2">
                               <Link
                                 to="#"
-                                className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse"
-                              >
+                                className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse">
                                 <span>Reply</span>
                                 <Icon
                                   icon="heroicons:arrow-right-20-solid"
@@ -290,8 +288,7 @@ const BlogDetailsPage = () => {
                         <div className="mt-2">
                           <Link
                             to="#"
-                            className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse"
-                          >
+                            className="flex space-x-2 items-center dark:text-slate-500 text-xs font-medium rtl:space-x-reverse">
                             <span>Reply</span>
                             <Icon
                               icon="heroicons:arrow-right-20-solid"

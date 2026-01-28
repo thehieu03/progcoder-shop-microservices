@@ -1,6 +1,7 @@
+"use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
@@ -47,7 +48,7 @@ const IndeterminateCheckbox = React.forwardRef(
         className="table-checkbox"
       />
     );
-  }
+  },
 );
 
 const NotificationPage = () => {
@@ -63,18 +64,20 @@ const NotificationPage = () => {
       try {
         setLoading(true);
         const response = await notificationService.getAll();
-        
+
         // Map API response to component format
-        const mappedNotifications = response.data.result.notifications.map((item) => ({
-          id: item.id,
-          title: item.title,
-          message: item.message,
-          isRead: item.isRead,
-          readAt: item.readAt,
-          targetUrl: item.targetUrl,
-          createdAt: item.createdAt || new Date().toISOString(),
-        }));
-        
+        const mappedNotifications = response.data.result.notifications.map(
+          (item) => ({
+            id: item.id,
+            title: item.title,
+            message: item.message,
+            isRead: item.isRead,
+            readAt: item.readAt,
+            targetUrl: item.targetUrl,
+            createdAt: item.createdAt || new Date().toISOString(),
+          }),
+        );
+
         setNotifications(mappedNotifications);
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
@@ -118,12 +121,14 @@ const NotificationPage = () => {
     if (!notification.isRead) {
       try {
         await notificationService.markAsRead([notification.id]);
-        
+
         // Update local state
         setNotifications((prevNotifications) =>
           prevNotifications.map((n) =>
-            n.id === notification.id ? { ...n, isRead: true, readAt: new Date().toISOString() } : n
-          )
+            n.id === notification.id
+              ? { ...n, isRead: true, readAt: new Date().toISOString() }
+              : n,
+          ),
         );
       } catch (error) {
         console.error("Failed to mark notification as read:", error);
@@ -139,7 +144,7 @@ const NotificationPage = () => {
   // Handle mark selected as read
   const handleMarkSelectedAsRead = async () => {
     const selectedIds = selectedFlatRows.map((row) => row.original.id);
-    
+
     if (selectedIds.length === 0) {
       toast.warning(t("notification.selectAll"));
       return;
@@ -157,8 +162,10 @@ const NotificationPage = () => {
       // Update local state
       setNotifications((prevNotifications) =>
         prevNotifications.map((n) =>
-          selectedIds.includes(n.id) ? { ...n, isRead: true, readAt: new Date().toISOString() } : n
-        )
+          selectedIds.includes(n.id)
+            ? { ...n, isRead: true, readAt: new Date().toISOString() }
+            : n,
+        ),
       );
 
       // Clear selection
@@ -174,73 +181,73 @@ const NotificationPage = () => {
     }
   };
 
-  const COLUMNS = useMemo(() => [
-    {
-      Header: t("notification.title"),
-      accessor: "title",
-      Cell: (row) => (
-        <div 
-          className="cursor-pointer"
-          onClick={() => handleNotificationClick(row.row.original)}
-        >
-          <span className={`font-semibold ${row.row.original.isRead ? 'text-slate-600 dark:text-slate-400' : 'text-slate-800 dark:text-slate-200'}`}>
-            {row?.cell?.value}
-          </span>
-        </div>
-      ),
-    },
-    {
-      Header: t("notification.message"),
-      accessor: "message",
-      Cell: (row) => (
-        <div 
-          className="cursor-pointer"
-          onClick={() => handleNotificationClick(row.row.original)}
-        >
-          <span className={`${row.row.original.isRead ? 'text-slate-500 dark:text-slate-400' : 'text-slate-600 dark:text-slate-300'} truncate max-w-[400px] block`}>
-            {row?.cell?.value}
-          </span>
-        </div>
-      ),
-    },
-    {
-      Header: t("common.status"),
-      accessor: "isRead",
-      Cell: (row) => {
-        const isRead = row?.cell?.value;
-        return (
-          <div 
+  const COLUMNS = useMemo(
+    () => [
+      {
+        Header: t("notification.title"),
+        accessor: "title",
+        Cell: (row) => (
+          <div
             className="cursor-pointer"
-            onClick={() => handleNotificationClick(row.row.original)}
-          >
+            onClick={() => handleNotificationClick(row.row.original)}>
             <span
-              className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
-                isRead
-                  ? "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
-                  : "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300"
-              }`}
-            >
-              {isRead ? t("notification.read") : t("notification.unread")}
+              className={`font-semibold ${row.row.original.isRead ? "text-slate-600 dark:text-slate-400" : "text-slate-800 dark:text-slate-200"}`}>
+              {row?.cell?.value}
             </span>
           </div>
-        );
+        ),
       },
-    },
-    {
-      Header: t("notification.time"),
-      accessor: "createdAt",
-      Cell: (row) => (
-        <div 
-          className="cursor-pointer"
-          onClick={() => handleNotificationClick(row.row.original)}
-        >
-          <span className="text-sm text-slate-500 dark:text-slate-400">
-            {formatTimeAgo(row?.cell?.value)}
-          </span>
-        </div>
-      ),
-    },
-  ], [t]);
+      {
+        Header: t("notification.message"),
+        accessor: "message",
+        Cell: (row) => (
+          <div
+            className="cursor-pointer"
+            onClick={() => handleNotificationClick(row.row.original)}>
+            <span
+              className={`${row.row.original.isRead ? "text-slate-500 dark:text-slate-400" : "text-slate-600 dark:text-slate-300"} truncate max-w-[400px] block`}>
+              {row?.cell?.value}
+            </span>
+          </div>
+        ),
+      },
+      {
+        Header: t("common.status"),
+        accessor: "isRead",
+        Cell: (row) => {
+          const isRead = row?.cell?.value;
+          return (
+            <div
+              className="cursor-pointer"
+              onClick={() => handleNotificationClick(row.row.original)}>
+              <span
+                className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                  isRead
+                    ? "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+                    : "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300"
+                }`}>
+                {isRead ? t("notification.read") : t("notification.unread")}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        Header: t("notification.time"),
+        accessor: "createdAt",
+        Cell: (row) => (
+          <div
+            className="cursor-pointer"
+            onClick={() => handleNotificationClick(row.row.original)}>
+            <span className="text-sm text-slate-500 dark:text-slate-400">
+              {formatTimeAgo(row?.cell?.value)}
+            </span>
+          </div>
+        ),
+      },
+    ],
+    [t],
+  );
 
   const data = useMemo(() => notifications, [notifications]);
 
@@ -266,7 +273,7 @@ const NotificationPage = () => {
         },
         ...columns,
       ]);
-    }
+    },
   );
 
   const {
@@ -297,15 +304,21 @@ const NotificationPage = () => {
         <div className="md:flex justify-between items-center mb-6">
           <h4 className="card-title">{t("notification.title")}</h4>
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
-            <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+            <GlobalFilter
+              filter={globalFilter}
+              setFilter={setGlobalFilter}
+              t={t}
+            />
             <button
               className="btn btn-dark btn-sm inline-flex items-center"
               onClick={handleMarkSelectedAsRead}
-              disabled={marking || selectedFlatRows.length === 0}
-            >
+              disabled={marking || selectedFlatRows.length === 0}>
               {marking ? (
                 <>
-                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  <Icon
+                    icon="heroicons:arrow-path"
+                    className="ltr:mr-2 rtl:ml-2 animate-spin"
+                  />
                   {t("common.loading")}
                 </>
               ) : (
@@ -322,8 +335,7 @@ const NotificationPage = () => {
             <div className="overflow-hidden">
               <table
                 className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
-                {...getTableProps()}
-              >
+                {...getTableProps()}>
                 <thead className="bg-slate-200 dark:bg-slate-700">
                   {headerGroups.map((headerGroup) => {
                     const { key: headerKey, ...restHeaderProps } =
@@ -332,14 +344,15 @@ const NotificationPage = () => {
                       <tr key={headerKey} {...restHeaderProps}>
                         {headerGroup.headers.map((column) => {
                           const { key: columnKey, ...restColumnProps } =
-                            column.getHeaderProps(column.getSortByToggleProps());
+                            column.getHeaderProps(
+                              column.getSortByToggleProps(),
+                            );
                           return (
                             <th
                               key={columnKey}
                               {...restColumnProps}
                               scope="col"
-                              className="table-th"
-                            >
+                              className="table-th">
                               {column.render("Header")}
                               <span>
                                 {column.isSorted
@@ -357,27 +370,38 @@ const NotificationPage = () => {
                 </thead>
                 <tbody
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
-                  {...getTableBodyProps()}
-                >
+                  {...getTableBodyProps()}>
                   {loading ? (
                     <tr>
-                      <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
+                      <td
+                        colSpan={headerGroups[0]?.headers?.length || 5}
+                        className="table-td text-center py-8">
                         <div className="flex flex-col items-center justify-center">
-                          <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                          <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
+                          <Icon
+                            icon="heroicons:arrow-path"
+                            className="animate-spin text-2xl text-slate-400 mb-2"
+                          />
+                          <span className="text-slate-500 dark:text-slate-400">
+                            {t("common.loading")}
+                          </span>
                         </div>
                       </td>
                     </tr>
                   ) : page.length === 0 ? (
                     <tr>
-                      <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
-                        <span className="text-slate-500 dark:text-slate-400">{t("notification.noNotificationsFound")}</span>
+                      <td
+                        colSpan={headerGroups[0]?.headers?.length || 5}
+                        className="table-td text-center py-8">
+                        <span className="text-slate-500 dark:text-slate-400">
+                          {t("notification.noNotificationsFound")}
+                        </span>
                       </td>
                     </tr>
                   ) : (
                     page.map((row) => {
                       prepareRow(row);
-                      const { key: rowKey, ...restRowProps } = row.getRowProps();
+                      const { key: rowKey, ...restRowProps } =
+                        row.getRowProps();
                       return (
                         <tr key={rowKey} {...restRowProps}>
                           {row.cells.map((cell) => {
@@ -387,8 +411,7 @@ const NotificationPage = () => {
                               <td
                                 key={cellKey}
                                 {...restCellProps}
-                                className="table-td"
-                              >
+                                className="table-td">
                                 {cell.render("Cell")}
                               </td>
                             );
@@ -407,8 +430,7 @@ const NotificationPage = () => {
             <select
               className="form-control py-2 w-max"
               value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-            >
+              onChange={(e) => setPageSize(Number(e.target.value))}>
               {[10, 25, 50].map((size) => (
                 <option key={size} value={size}>
                   {t("common.show")} {size}
@@ -427,8 +449,7 @@ const NotificationPage = () => {
               <button
                 className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
+                disabled={!canPreviousPage}>
                 <Icon icon="heroicons:chevron-double-left-solid" />
               </button>
             </li>
@@ -436,8 +457,7 @@ const NotificationPage = () => {
               <button
                 className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={() => previousPage()}
-                disabled={!canPreviousPage}
-              >
+                disabled={!canPreviousPage}>
                 {t("common.previous")}
               </button>
             </li>
@@ -450,8 +470,7 @@ const NotificationPage = () => {
                       ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
                       : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
                   } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
-                  onClick={() => gotoPage(pageIdx)}
-                >
+                  onClick={() => gotoPage(pageIdx)}>
                   {pageNum + 1}
                 </button>
               </li>
@@ -460,8 +479,7 @@ const NotificationPage = () => {
               <button
                 className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={() => nextPage()}
-                disabled={!canNextPage}
-              >
+                disabled={!canNextPage}>
                 {t("common.next")}
               </button>
             </li>
@@ -469,8 +487,7 @@ const NotificationPage = () => {
               <button
                 onClick={() => gotoPage(pageCount - 1)}
                 disabled={!canNextPage}
-                className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
+                className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}>
                 <Icon icon="heroicons:chevron-double-right-solid" />
               </button>
             </li>
@@ -482,4 +499,3 @@ const NotificationPage = () => {
 };
 
 export default NotificationPage;
-
