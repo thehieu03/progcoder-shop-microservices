@@ -1,5 +1,6 @@
 ﻿namespace Catalog.Domain.Abstractions;
 
+// Id
 public interface IEntityId<T>
 {
     #region Fields, Properties and Indexers
