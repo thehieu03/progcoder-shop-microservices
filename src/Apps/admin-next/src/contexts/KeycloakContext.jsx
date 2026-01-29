@@ -1,3 +1,4 @@
+"use client";
 import React, {
   createContext,
   useContext,
@@ -238,7 +239,7 @@ export const KeycloakProvider = ({ children }) => {
   const login = useCallback(
     (options = {}) => {
       // Check for Mock Auth
-      if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true" || true) {
+      if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true") {
         console.log("Keycloak: Mock login");
         setAuthenticated(true);
         dispatch(
@@ -262,7 +263,7 @@ export const KeycloakProvider = ({ children }) => {
   const logout = useCallback(
     (options = {}) => {
       // Check for Mock Auth
-      if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true" || true) {
+      if (process.env.NEXT_PUBLIC_MOCK_AUTH === "true") {
         console.log("Keycloak: Mock logout");
         setAuthenticated(false);
         dispatch(logOut());

@@ -1,3 +1,4 @@
+"use client";
 import { Dialog,DialogPanel, Transition, TransitionChild } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import Icon from "@/components/ui/Icon";

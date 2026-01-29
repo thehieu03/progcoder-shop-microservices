@@ -1,3 +1,4 @@
+"use client";
 import { Dialog, Transition, Combobox, ComboboxInput, ComboboxOptions,ComboboxOption, TransitionChild, DialogPanel, } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import Icon from "@/components/ui/Icon";

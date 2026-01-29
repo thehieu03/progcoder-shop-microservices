@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Icon from "@/components/ui/Icon";
 import Cleave from "cleave.js/react";

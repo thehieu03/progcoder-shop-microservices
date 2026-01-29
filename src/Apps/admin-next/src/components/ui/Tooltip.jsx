@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 // TEMPORARY: Pass-through component to fix "Maximum update depth exceeded" error

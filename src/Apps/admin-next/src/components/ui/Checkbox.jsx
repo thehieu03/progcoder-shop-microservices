@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import CheckImage from "@/assets/images/icon/ck-white.svg";
 const Checkbox = ({

@@ -16,4 +16,18 @@ public abstract class Entity<T> : IEntityId<T>, IAuditable
 
     #endregion
 
+    #region Public Methods
+
+    public void SetCreatedBy(string createdBy)
+    {
+        CreatedBy = createdBy;
+    }
+
+    public void SetLastModifiedBy(string lastModifiedBy)
+    {
+        LastModifiedBy = lastModifiedBy;
+    }
+
+    #endregion
+
 }

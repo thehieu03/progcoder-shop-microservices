@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import Icon from "@/components/ui/Icon";
 const Accordion = ({ items, className = "space-y-5" }) => {

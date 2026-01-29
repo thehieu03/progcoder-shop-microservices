@@ -10,7 +10,7 @@ const LoginForm = () => {
 
   const handleKeycloakLogin = () => {
     if (keycloakReady) {
-      login();
+       login();
     }
   };
 
@@ -21,8 +21,7 @@ const LoginForm = () => {
         text={t("common.signIn")}
         className="btn btn-dark block w-full text-center"
         onClick={handleKeycloakLogin}
-        isLoading={!keycloakReady}
-      />
+        isLoading={!keycloakReady} disabled={undefined} children={undefined} icon={undefined} link={undefined} div={undefined}      />
       <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
         {t("auth.signInToAccount")}
       </p>

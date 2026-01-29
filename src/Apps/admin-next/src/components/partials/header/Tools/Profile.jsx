@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Dropdown from "@/components/ui/Dropdown";
 import Icon from "@/components/ui/Icon";

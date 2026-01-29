@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import useDarkMode from "@/hooks/useDarkMode";
 import LogoWhite from "@/assets/images/logo/logo-white.svg";

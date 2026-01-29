@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Textinput from "@/components/ui/Textinput";
 import { useForm } from "react-hook-form";
