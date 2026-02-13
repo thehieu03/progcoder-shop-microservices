@@ -44,7 +44,21 @@ public class UnpublishProductCommandHandler(IDocumentSession session, IMediator 
         entity.Unpublish(command.Actor.ToString());
         session.Store(entity);
 
-        var @event = new DeletedUnPublishedProductDomainEvent(entity.Id);
+        var @event = new UpsertedProductDomainEvent(
+            entity.Id,
+            entity.Name!,
+            entity.Sku!,
+            entity.Slug!,
+            entity.Price,
+            entity.SalePrice,
+            entity.CategoryIds?.Select(id => id.ToString()).ToList(),
+            entity.Images?.Select(img => img.PublicURL).Where(url => !string.IsNullOrWhiteSpace(url)).Cast<string>().ToList(),
+            entity.Thumbnail?.PublicURL!,
+            entity.Status,
+            entity.CreatedOnUtc,
+            entity.CreatedBy!,
+            entity.LastModifiedOnUtc,
+            entity.LastModifiedBy);
 
         await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);

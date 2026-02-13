@@ -1,0 +1,41 @@
+@startuml AdminNext_Architecture_Simple
+
+title Admin Next.js High-Level Architecture
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam componentStyle uml2
+
+package "Presentation Layer" as Presentation {
+    [UI Components]
+    [App Routing / Pages]
+}
+
+package "State Management Layer" as State {
+    [Redux Store]
+    [React Contexts]
+}
+
+package "Service & Data Layer" as Services {
+    [API Services]
+    [Data Mocking]
+    [Axios Config]
+}
+
+package "Core & Infrastructure Layer" as Core {
+    [Utilities & Helpers]
+    [Custom Hooks]
+    [Configurations]
+    [Shared Types]
+}
+
+' Relationships
+Presentation --> State : Dispatches Actions / Reads State
+Presentation --> Services : Direct API Calls
+Presentation --> Core : Uses Hooks / Utils
+
+State --> Services : Async Thunks / API Middleware
+State --> Core : Uses Types / Utils
+
+Services --> Core : Uses Types / Utils
+
+@enduml

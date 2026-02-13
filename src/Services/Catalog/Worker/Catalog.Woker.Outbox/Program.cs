@@ -14,7 +14,6 @@ builder.Services
     .AddInfrastructureServices(builder.Configuration)
     .AddWorkerServices(builder.Configuration)
     .AddHostedService<OutboxBackgroundService>();
-
 var host = builder.Build();
 
 host.Run();

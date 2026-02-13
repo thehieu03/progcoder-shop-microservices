@@ -18,11 +18,13 @@ public sealed class UpdateProductRequest
 
     public List<string>? CategoryIds { get; set; }
 
-    public List<string>? CurrentImageUrls { get; set; }
-
     public List<IFormFile>? ImageFiles { get; set; }
 
+    public List<string>? KeepImageUrls { get; set; }  // URLs of existing images to keep
+
     public IFormFile? ThumbnailFile { get; set; }
+
+    public string? KeepThumbnailUrl { get; set; }  // URL of existing thumbnail to keep
 
     public Guid? BrandId { get; set; }
 

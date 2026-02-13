@@ -1,6 +1,7 @@
 #region using
 
 using AutoMapper;
+using Common.Models;
 using Catalog.Application.Dtos.Brands;
 using Catalog.Application.Dtos.Categories;
 using Catalog.Application.Dtos.Products;

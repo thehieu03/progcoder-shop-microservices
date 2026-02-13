@@ -87,6 +87,8 @@
     "totalUsers": "Total users",
     "totalProducts": "Total products",
     "totalRevenue": "Total revenue",
+    "growth": "Growth",
+    "productsSold": "Products Sold",
     "orderGrowthReport": "Order Growth Report",
     "numberOfOrders": "Number of Orders",
     "dayOfMonth": "Day of Month",

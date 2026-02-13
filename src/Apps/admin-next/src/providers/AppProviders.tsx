@@ -12,7 +12,7 @@ import "../assets/css/app.css";
 import "../i18n/config"; // Initialize i18n
 
 // Import MirageJS server
-import { makeServer } from "@/api/mockServer";
+import { makeServer } from "@/core/api/mockServer";
 
 export default function AppProviders({
   children,
@@ -21,7 +21,7 @@ export default function AppProviders({
 }) {
   // Initialize MirageJS Mock Server
   React.useEffect(() => {
-    // Check if mock data is enabled (force true for this user request)
+    // Check if mock data is enabled
     const useMockData = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
 
     if (useMockData && typeof window !== "undefined") {

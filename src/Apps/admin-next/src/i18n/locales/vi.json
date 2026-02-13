@@ -87,6 +87,8 @@
     "totalUsers": "Tổng số người dùng",
     "totalProducts": "Tổng số sản phẩm",
     "totalRevenue": "Tổng doanh thu",
+    "growth": "Tăng trưởng",
+    "productsSold": "Sản phẩm đã bán",
     "orderGrowthReport": "Báo cáo Tăng trưởng Đơn hàng",
     "numberOfOrders": "Số lượng Đơn hàng",
     "dayOfMonth": "Ngày trong Tháng",

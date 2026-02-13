@@ -8,29 +8,15 @@ namespace Catalog.Domain.Entities;
 
 public sealed class OutboxMessageEntity : EntityId<Guid>
 {
-    #region Fields, Properties and Indexers
-
     public string? EventType { get; set; }
-
     public string? Content { get; set; }
-
     public DateTimeOffset OccurredOnUtc { get; set; }
-
     public DateTimeOffset? ProcessedOnUtc { get; set; }
-
     public string? LastErrorMessage { get; set; }
-
     public DateTimeOffset? ClaimedOnUtc { get; set; }
-
     public int AttemptCount { get; set; }
-
     public int MaxAttempts { get; set; }
-
     public DateTimeOffset? NextAttemptOnUtc { get; set; }
-
-    #endregion
-
-    #region Factories
 
     public static OutboxMessageEntity Create(Guid id, string eventType, string content, DateTimeOffset occurredOnUtc)
     {
@@ -44,10 +30,6 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
             AttemptCount = 0
         };
     }
-
-    #endregion
-
-    #region Methods
 
     public void CompleteProcessing(DateTimeOffset processedOnUtc, string? lastErrorMessage = null)
     {
@@ -107,6 +89,4 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
     {
         return AttemptCount >= MaxAttempts;
     }
-
-    #endregion
 }

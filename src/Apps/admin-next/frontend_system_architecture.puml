@@ -1,0 +1,59 @@
+@startuml Frontend_System_Architecture
+
+title System Architecture Package Diagram (Frontend - Overview)
+left to right direction
+
+' Style configuration
+skinparam packageStyle rectangle
+skinparam roundcorner 10
+skinparam linetype ortho
+
+' Define Packages
+
+package "Core Layer" as Core <<Infrastructure>> {
+    [Configs]
+    [Utils]
+    [Hooks]
+    [Types]
+}
+
+package "Service Layer" as Services <<Data Access>> {
+    [API Services]
+    [Mock Data]
+    [Axios Client]
+}
+
+package "State Layer" as State <<State Management>> {
+    [Redux Store & Slices]
+    [React Contexts]
+}
+
+package "Presentation Layer" as UI <<User Interface>> {
+    folder "App Routing" {
+        [Pages & Layouts]
+    }
+    folder "Components" {
+        [UI Library (Atoms)]
+        [Partials (Molecules/Orgs)]
+    }
+}
+
+' Define Dependencies
+
+' UI -> State
+UI ..> State : Selectors / Dispatch
+UI ..> State : Consume Context
+
+' UI -> Core
+UI ..> Core : Use Hooks / Utils / Configs
+
+' State -> Services
+State ..> Services : Async API Calls
+
+' Services -> Core
+Services ..> Core : Use Types / Env Config
+
+' State -> Core
+State ..> Core : Use Types
+
+@enduml

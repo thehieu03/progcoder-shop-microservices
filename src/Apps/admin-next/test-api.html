@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Mock Data</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; color: #333; }
+        .endpoint { background: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .endpoint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .method { padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
+        .method.get { background: #4CAF50; }
+        .method.post { background: #2196F3; }
+        .method.put { background: #FF9800; }
+        .method.delete { background: #f44336; }
+        .path { font-family: monospace; font-size: 14px; color: #333; }
+        .test-btn { margin-left: auto; padding: 6px 16px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .test-btn:hover { background: #1976D2; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 12px; font-family: monospace; max-height: 200px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+        .result.error { background: #ffebee; color: #c62828; }
+        .result.success { background: #e8f5e9; color: #2e7d32; }
+        .loading { color: #666; font-style: italic; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 32px; font-weight: bold; color: #2196F3; }
+        .stat-label { color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Mock API Test Interface</h1>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-products">-</div>
+                <div class="stat-label">Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-orders">-</div>
+                <div class="stat-label">Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-categories">-</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-brands">-</div>
+                <div class="stat-label">Brands</div>
+            </div>
+        </div>
+
+        <div id="endpoints"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:4001/api';
+        
+        const endpoints = [
+            { method: 'GET', path: '/products', desc: 'Lấy danh sách products' },
+            { method: 'GET', path: '/products?all=true', desc: 'Lấy tất cả products' },
+            { method: 'GET', path: '/products/[id]', desc: 'Lấy chi tiết product (thay [id] bằng ID thật)' },
+            { method: 'GET', path: '/categories', desc: 'Lấy danh sách categories' },
+            { method: 'GET', path: '/brands', desc: 'Lấy danh sách brands' },
+            { method: 'GET', path: '/orders', desc: 'Lấy danh sách orders' },
+            { method: 'GET', path: '/inventory', desc: 'Lấy danh sách inventory' },
+            { method: 'GET', path: '/coupons', desc: 'Lấy danh sách coupons' },
+            { method: 'GET', path: '/notifications', desc: 'Lấy notifications' },
+            { method: 'GET', path: '/notifications?countUnread=true', desc: 'Đếm notifications chưa đọc' },
+            { method: 'GET', path: '/dashboard/statistics', desc: 'Lấy dashboard statistics' },
+            { method: 'GET', path: '/dashboard/statistics?type=orderGrowth', desc: 'Lấy order growth chart' },
+        ];
+
+        function renderEndpoints() {
+            const container = document.getElementById('endpoints');
+            container.innerHTML = endpoints.map((ep, index) => `
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method ${ep.method.toLowerCase()}">${ep.method}</span>
+                        <span class="path">${ep.path}</span>
+                        <button class="test-btn" onclick="testEndpoint('${ep.method}', '${ep.path}', ${index})">Test</button>
+                    </div>
+                    <div class="desc" style="color: #666; font-size: 13px;">${ep.desc}</div>
+                    <div id="result-${index}" class="result" style="display: none;"></div>
+                </div>
+            `).join('');
+        }
+
+        async function testEndpoint(method, path, index) {
+            const resultDiv = document.getElementById(`result-${index}`);
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'Loading...';
+
+            try {
+                // Replace [id] with first product id if needed
+                let testPath = path;
+                if (path.includes('[id]')) {
+                    const productsRes = await fetch(`${BASE_URL}/products?all=true`);
+                    const productsData = await productsRes.json();
+                    if (productsData.result?.items?.[0]?.id) {
+                        testPath = path.replace('[id]', productsData.result.items[0].id);
+                    } else {
+                        throw new Error('No products found to get ID');
+                    }
+                }
+
+                const response = await fetch(`${BASE_URL}${testPath}`);
+                const data = await response.json();
+                
+                resultDiv.classList.add('success');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.classList.add('error');
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const [products, orders, categories, brands] = await Promise.all([
+                    fetch(`${BASE_URL}/products?all=true`).then(r => r.json()),
+                    fetch(`${BASE_URL}/orders?all=true`).then(r => r.json()),
+                    fetch(`${BASE_URL}/categories`).then(r => r.json()),
+                    fetch(`${BASE_URL}/brands`).then(r => r.json()),
+                ]);
+
+                document.getElementById('stat-products').textContent = products.result?.items?.length || 0;
+                document.getElementById('stat-orders').textContent = orders.orders?.length || 0;
+                document.getElementById('stat-categories').textContent = categories.categories?.length || 0;
+                document.getElementById('stat-brands').textContent = brands.items?.length || 0;
+            } catch (e) {
+                console.error('Failed to load stats:', e);
+            }
+        }
+
+        renderEndpoints();
+        loadStats();
+    </script>
+</body>
+</html>

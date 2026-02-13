@@ -39,8 +39,7 @@ export default function DashboardLayoutClient({
         !pathname.startsWith("/login") &&
         !pathname.startsWith("/auth")
       ) {
-        // TEMPORARY: Allow access for testing
-        // router.push("/login");
+        router.push("/login");
       }
     }
   }, [authenticated, keycloakReady, router, pathname]);
