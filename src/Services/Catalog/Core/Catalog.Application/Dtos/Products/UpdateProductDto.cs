@@ -2,8 +2,6 @@
 
 #endregion
 
-using Common.Models;
-
 namespace Catalog.Application.Dtos.Products;
 
 public class UpdateProductDto
@@ -24,13 +22,13 @@ public class UpdateProductDto
 
     public List<Guid>? CategoryIds { get; set; }
 
-    public List<UploadFileBytes>? UploadImages { get; set; }
+    public List<string>? CurrentImageUrls { get; set; }
 
-    public List<string>? KeepImageUrls { get; set; }  // URLs of existing images to keep
+    public List<UploadFileBytes>? UploadImages { get; set; }
 
     public UploadFileBytes? UploadThumbnail { get; set; }
 
-    public string? KeepThumbnailUrl { get; set; }  // URL of existing thumbnail to keep
+    public string? CurrentThumbnailUrl { get; set; }
 
     public Guid? BrandId { get; set; }
 

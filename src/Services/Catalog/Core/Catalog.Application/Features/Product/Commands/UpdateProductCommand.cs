@@ -59,7 +59,8 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 public class UpdateProductCommandHandler(IMapper mapper,
     IDocumentSession session,
     IMinIOCloudService minIO,
-    IMediator mediator) : ICommandHandler<UpdateProductCommand, Guid>
+    IMediator mediator,
+    ISender sender) : ICommandHandler<UpdateProductCommand, Guid>
 {
     #region Implementations
 
@@ -87,8 +88,8 @@ public class UpdateProductCommandHandler(IMapper mapper,
             brandId: dto.BrandId,
             performedBy: command.Actor.ToString());
 
-        await UploadImagesAsync(dto.UploadImages, dto.KeepImageUrls, entity, cancellationToken);
-        await UploadThumbnailAsync(dto.UploadThumbnail, dto.KeepThumbnailUrl, entity, cancellationToken);
+        await UploadImagesAsync(dto.UploadImages, dto.CurrentImageUrls, entity, cancellationToken);
+        await UploadThumbnailAsync(dto.UploadThumbnail, entity, cancellationToken);
 
         entity.UpdateColors(dto.Colors?.Distinct().ToList(), command.Actor.ToString());
         entity.UpdateSizes(dto.Sizes?.Distinct().ToList(), command.Actor.ToString());
@@ -128,6 +129,15 @@ public class UpdateProductCommandHandler(IMapper mapper,
         await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
 
+        if (command.Dto.Published)
+        {
+            await sender.Send(new PublishProductCommand(entity.Id, command.Actor), cancellationToken);
+        }
+        else
+        {
+            await sender.Send(new UnpublishProductCommand(entity.Id, command.Actor), cancellationToken);
+        }
+
         return entity.Id;
     }
 
@@ -137,7 +147,7 @@ public class UpdateProductCommandHandler(IMapper mapper,
 
     private async Task UploadImagesAsync(
         List<UploadFileBytes>? filesDto,
-        List<string>? keepImageUrls,
+        List<string>? currentImageUrls,
         ProductEntity entity,
         CancellationToken cancellationToken)
     {
@@ -147,25 +157,16 @@ public class UpdateProductCommandHandler(IMapper mapper,
             var result = await minIO.UploadFilesAsync(filesDto, AppConstants.Bucket.Products, true, cancellationToken);
             newImages = mapper.Map<List<ProductImageEntity>>(result);
         }
-        entity.AddOrUpdateImages(newImages, keepImageUrls);
+        entity.AddOrUpdateImages(newImages, currentImageUrls);
     }
 
-    private async Task UploadThumbnailAsync(
-        UploadFileBytes? image,
-        string? keepThumbnailUrl,
-        ProductEntity entity,
-        CancellationToken cancellationToken)
+    private async Task UploadThumbnailAsync(UploadFileBytes? image, ProductEntity entity, CancellationToken cancellationToken)
     {
-        if (image != null)
-        {
-            var result = await minIO.UploadFilesAsync([image], AppConstants.Bucket.Products, true, cancellationToken);
-            var thumbnail = mapper.Map<ProductImageEntity>(result.FirstOrDefault());
-            entity.AddOrUpdateThumbnail(thumbnail, keepThumbnailUrl);
-        }
-        else if (!string.IsNullOrEmpty(keepThumbnailUrl))
-        {
-            entity.AddOrUpdateThumbnail(null, keepThumbnailUrl);
-        }
+        if (image == null) return;
+
+        var result = await minIO.UploadFilesAsync([image], AppConstants.Bucket.Products, true, cancellationToken);
+        var thumbnail = result.FirstOrDefault();
+        entity.AddOrUpdateThumbnail(mapper.Map<ProductImageEntity>(thumbnail));
     }
 
     private async Task ValidateCategoryAsync(List<Guid>? inputCategoryIds, CancellationToken cancellationToken = default)

@@ -4,7 +4,6 @@ using AutoMapper;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
-using Catalog.Domain.Events;
 using Marten;
 using MediatR;
 
@@ -60,7 +59,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 public class CreateProductCommandHandler(IMapper mapper,
     IDocumentSession session,
     IMinIOCloudService minIO,
-    IMediator mediator) : ICommandHandler<CreateProductCommand, Guid>
+    ISender sender) : ICommandHandler<CreateProductCommand, Guid>
 {
     #region Implementations
 
@@ -104,25 +103,12 @@ public class CreateProductCommandHandler(IMapper mapper,
 
         session.Store(entity);
 
-        // Raise domain event for outbox pattern
-        var @event = new UpsertedProductDomainEvent(
-            entity.Id,
-            entity.Name!,
-            entity.Sku!,
-            entity.Slug!,
-            entity.Price,
-            entity.SalePrice,
-            entity.CategoryIds?.Select(id => id.ToString()).ToList(),
-            entity.Images?.Select(img => img.PublicURL).Where(url => !string.IsNullOrWhiteSpace(url)).Cast<string>().ToList(),
-            entity.Thumbnail?.PublicURL!,
-            entity.Status,
-            entity.CreatedOnUtc,
-            entity.CreatedBy!,
-            entity.LastModifiedOnUtc,
-            entity.LastModifiedBy);
-
-        await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
+
+        if (entity.Published)
+        {
+            await sender.Send(new PublishProductCommand(entity.Id, command.Actor), cancellationToken);
+        }
 
         return entity.Id;
     }
